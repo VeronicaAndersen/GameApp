@@ -1,8 +1,15 @@
 import { useCallback } from 'react';
+import { Animated } from 'react-native';
 import { GameState } from '../types';
 import { MAX_HUNGER, MAX_HAPPINESS } from '../constants';
 import { GAME_ACTIONS } from '../constants/gameActions';
 import { useBounceAnimation } from './useBounceAnimation';
+
+export interface UseGameActionsReturn {
+  bounceAnim: Animated.Value;
+  handleEat: () => void;
+  handlePlay: () => void;
+}
 
 /**
  * Custom hook for managing game actions (eat, play)
@@ -11,10 +18,10 @@ import { useBounceAnimation } from './useBounceAnimation';
  */
 export function useGameActions(
   setGameState: React.Dispatch<React.SetStateAction<GameState>>
-) {
+): UseGameActionsReturn {
   const { bounceAnim, playBounceAnimation } = useBounceAnimation();
 
-  const handleEat = useCallback(() => {
+  const handleEat = useCallback((): void => {
     playBounceAnimation();
     setGameState((prev) => ({
       ...prev,
@@ -23,7 +30,7 @@ export function useGameActions(
     }));
   }, [playBounceAnimation, setGameState]);
 
-  const handlePlay = useCallback(() => {
+  const handlePlay = useCallback((): void => {
     playBounceAnimation();
     setGameState((prev) => ({
       ...prev,

@@ -8,6 +8,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dimensions, StatusBar, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { CharacterSelectionScreen } from './screens/CharacterSelectionScreen';
 import { GameScreen } from './screens/GameScreen';
 import { usePersistentGameState } from './hooks/usePersistentGameState';
@@ -31,23 +32,25 @@ function App() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      {gameState.character === null ? (
-        <CharacterSelectionScreen
-          dimensions={dimensions}
-          isDarkMode={isDarkMode}
-          onSelectCharacter={selectCharacter}
-        />
-      ) : (
-        <GameScreen
-          dimensions={dimensions}
-          isDarkMode={isDarkMode}
-          gameState={gameState}
-          setGameState={setGameState}
-        />
-      )}
-    </SafeAreaProvider>
+    <ErrorBoundary>
+      <SafeAreaProvider>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        {gameState.character === null ? (
+          <CharacterSelectionScreen
+            dimensions={dimensions}
+            isDarkMode={isDarkMode}
+            onSelectCharacter={selectCharacter}
+          />
+        ) : (
+          <GameScreen
+            dimensions={dimensions}
+            isDarkMode={isDarkMode}
+            gameState={gameState}
+            setGameState={setGameState}
+          />
+        )}
+      </SafeAreaProvider>
+    </ErrorBoundary>
   );
 }
 

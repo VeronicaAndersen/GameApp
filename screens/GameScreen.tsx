@@ -2,15 +2,15 @@ import React from 'react';
 import { Text, View, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CharacterIcon } from '../components/CharacterIcon';
-import { GameState } from '../types';
+import { GameState, Dimensions } from '../types';
 import { CHARACTERS, INITIAL_STATE, XP_PER_LEVEL, MAX_HUNGER, MAX_HAPPINESS } from '../constants';
 import { scale, moderateScale } from '../utils/responsive';
 import { styles } from '../styles';
 import { useGameActions } from '../hooks/useGameActions';
 import { useLevelUp } from '../hooks/useLevelUp';
 
-interface GameScreenProps {
-  dimensions: { width: number; height: number };
+export interface GameScreenProps {
+  dimensions: Dimensions;
   isDarkMode: boolean;
   gameState: GameState;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>;
@@ -21,7 +21,7 @@ export function GameScreen({
   isDarkMode,
   gameState,
   setGameState,
-}: GameScreenProps) {
+}: GameScreenProps): React.JSX.Element {
   const isTablet = dimensions.width >= 768;
   const character = CHARACTERS.find((c) => c.type === gameState.character)!;
 
@@ -53,11 +53,23 @@ export function GameScreen({
               {character.name}
             </Text>
             <TouchableOpacity
-              style={styles.backButton}
+              style={[
+                styles.backButton,
+                isDarkMode && styles.darkBackButton,
+                isTablet && styles.tabletBackButton,
+              ]}
               onPress={() => setGameState(INITIAL_STATE)}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel="Change character"
+              accessibilityHint="Return to character selection screen to choose a different character"
             >
-              <Text style={[styles.backButtonText, isDarkMode && styles.darkSubtitle]}>
-                Change Character
+              <Text style={[
+                styles.backButtonText,
+                isDarkMode && styles.darkSubtitle,
+                isTablet && styles.tabletBackButtonText,
+              ]}>
+                Byt karaktär
               </Text>
             </TouchableOpacity>
           </View>
@@ -107,7 +119,11 @@ export function GameScreen({
           </View>
 
           {/* Stats */}
-          <View style={styles.statsContainer}>
+          <View
+            style={styles.statsContainer}
+            accessibilityRole="summary"
+            accessibilityLabel={`Character stats: Level ${gameState.level}, ${gameState.experience % XP_PER_LEVEL} of ${XP_PER_LEVEL} experience points, ${gameState.hunger}% hunger, ${gameState.happiness}% happiness`}
+          >
             <View style={styles.levelContainer}>
               <Text
                 style={[
@@ -115,6 +131,7 @@ export function GameScreen({
                   isDarkMode && styles.darkTitle,
                   isTablet && styles.tabletLevelText,
                 ]}
+                accessibilityRole="text"
               >
                 Level {gameState.level}
               </Text>
@@ -184,7 +201,7 @@ export function GameScreen({
                     isDarkMode && styles.darkSubtitle,
                   ]}
                 >
-                  Happiness
+                  Glädje
                 </Text>
                 <View
                   style={[
@@ -224,6 +241,10 @@ export function GameScreen({
               ]}
               onPress={handleEat}
               activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel={`Feed ${character.name}`}
+              accessibilityHint={`Increase hunger by 20 points and gain 10 experience`}
+              accessibilityState={{ disabled: gameState.hunger >= MAX_HUNGER }}
             >
               <Text style={styles.actionEmoji}>🍕</Text>
               <Text
@@ -232,7 +253,7 @@ export function GameScreen({
                   isTablet && styles.tabletActionButtonText,
                 ]}
               >
-                Eat
+                Mat
               </Text>
             </TouchableOpacity>
 
@@ -244,6 +265,10 @@ export function GameScreen({
               ]}
               onPress={handlePlay}
               activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel={`Play with ${character.name}`}
+              accessibilityHint={`Increase happiness by 20 points, gain 15 experience, and decrease hunger by 5`}
+              accessibilityState={{ disabled: gameState.happiness >= MAX_HAPPINESS }}
             >
               <Text style={styles.actionEmoji}>🎮</Text>
               <Text
@@ -252,7 +277,7 @@ export function GameScreen({
                   isTablet && styles.tabletActionButtonText,
                 ]}
               >
-                Play
+                Lek
               </Text>
             </TouchableOpacity>
           </View>

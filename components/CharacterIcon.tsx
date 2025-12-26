@@ -1,11 +1,11 @@
-import React from 'react';
-import { Text } from 'react-native';
+import React, { useMemo } from 'react';
+import { Text, StyleSheet } from 'react-native';
 import { LizardSvg } from './LizardSvg';
 import { CatSvg } from './CatSvg';
 import { UnicornSvg } from './UnicornSvg';
 import { CharacterType } from '../types';
 import { CHARACTERS } from '../constants';
-import { moderateScale } from '../utils/responsive';
+import { SVG_ASPECT_RATIOS, SVG_SIZE_MULTIPLIERS } from '../constants/svgAspectRatios';
 
 interface CharacterIconProps {
   characterType: CharacterType;
@@ -14,38 +14,52 @@ interface CharacterIconProps {
   containerSize?: number;
 }
 
-export function CharacterIcon({
+/**
+ * Optimized character icon component with memoization
+ * Renders SVG graphics for characters
+ */
+export const CharacterIcon = React.memo<CharacterIconProps>(({
   characterType,
   size,
   isTablet,
   containerSize,
-}: CharacterIconProps) {
-  const getSvgSize = () => {
-    return containerSize ? containerSize * 0.9 : (isTablet ? size * 2 : size * 1.8);
+}) => {
+  const svgSize = useMemo(() => {
+    if (containerSize) {
+      return containerSize * SVG_SIZE_MULTIPLIERS.containerBased;
+    }
+    return isTablet ? size * SVG_SIZE_MULTIPLIERS.tablet : size * SVG_SIZE_MULTIPLIERS.phone;
+  }, [containerSize, isTablet, size]);
+
+  const renderCharacter = () => {
+    switch (characterType) {
+      case 'lizard':
+        return <LizardSvg width={svgSize} height={svgSize * SVG_ASPECT_RATIOS.lizard} />;
+
+      case 'cat':
+        return <CatSvg width={svgSize} height={svgSize * SVG_ASPECT_RATIOS.cat} />;
+
+      case 'unicorn':
+        return <UnicornSvg width={svgSize} height={svgSize * SVG_ASPECT_RATIOS.unicorn} />;
+
+      default: {
+        const character = CHARACTERS.find((c) => c.type === characterType);
+        return (
+          <Text style={[styles.emojiText, { fontSize: size }]}>
+            {character?.emoji}
+          </Text>
+        );
+      }
+    }
   };
 
-  switch (characterType) {
-    case 'lizard': {
-      const svgSize = getSvgSize();
-      return <LizardSvg width={svgSize} height={svgSize * 0.735} />;
-    }
-    case 'cat': {
-      const svgSize = getSvgSize();
-      const aspectRatio = 294.0701 / 246.54726;
-      return <CatSvg width={svgSize} height={svgSize * aspectRatio} />;
-    }
-    case 'unicorn': {
-      const svgSize = getSvgSize();
-      const aspectRatio = 172 / 211;
-      return <UnicornSvg width={svgSize} height={svgSize * aspectRatio} />;
-    }
-    default: {
-      const character = CHARACTERS.find((c) => c.type === characterType);
-      return (
-        <Text style={{ fontSize: size }}>
-          {character?.emoji}
-        </Text>
-      );
-    }
-  }
-}
+  return renderCharacter();
+});
+
+CharacterIcon.displayName = 'CharacterIcon';
+
+const styles = StyleSheet.create({
+  emojiText: {
+    textAlign: 'center',
+  },
+});

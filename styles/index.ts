@@ -128,12 +128,42 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   backButton: {
-    marginTop: verticalScale(8),
+    marginTop: verticalScale(12),
+    paddingVertical: verticalScale(12),
+    paddingHorizontal: scale(24),
+    backgroundColor: '#F5F5F5',
+    borderRadius: moderateScale(8),
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    minHeight: 44, // Touch-friendly minimum
+    minWidth: scale(160),
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  darkBackButton: {
+    backgroundColor: '#1A1A1A',
+    borderColor: '#333333',
+  },
+  tabletBackButton: {
+    paddingVertical: verticalScale(16),
+    paddingHorizontal: scale(32),
+    minWidth: scale(200),
   },
   backButtonText: {
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(16),
     color: '#666666',
-    textDecorationLine: 'underline',
+    fontWeight: '600',
+  },
+  tabletBackButtonText: {
+    fontSize: moderateScale(18),
   },
   characterDisplay: {
     alignItems: 'center',

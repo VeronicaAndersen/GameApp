@@ -6,19 +6,19 @@ export const BASE_HEIGHT = 844;
 export const CHARACTERS: Character[] = [
   {
     type: 'lizard',
-    name: 'Lizard with Human Head',
+    name: 'Ödla',
     emoji: '',
     color: '#8B4513',
   },
   {
     type: 'cat',
-    name: 'Cute Cat',
+    name: 'Katt',
     emoji: '',
     color: '#FF69B4',
   },
   {
     type: 'unicorn',
-    name: 'Unicorn',
+    name: 'Enhörning',
     emoji: '🦄',
     color: '#9370DB',
   },

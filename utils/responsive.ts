@@ -3,9 +3,45 @@ import { BASE_WIDTH, BASE_HEIGHT } from '../constants';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
+// Breakpoints for different device sizes
+export const BREAKPOINTS = {
+  phone: 0,
+  tablet: 768,
+  desktop: 1024,
+  largeDesktop: 1440,
+};
+
+// Device type detection
+export const isPhone = () => SCREEN_WIDTH < BREAKPOINTS.tablet;
+export const isTablet = () => SCREEN_WIDTH >= BREAKPOINTS.tablet && SCREEN_WIDTH < BREAKPOINTS.desktop;
+export const isDesktop = () => SCREEN_WIDTH >= BREAKPOINTS.desktop;
+
+// Get current device type
+export const getDeviceType = (): 'phone' | 'tablet' | 'desktop' => {
+  if (SCREEN_WIDTH < BREAKPOINTS.tablet) return 'phone';
+  if (SCREEN_WIDTH < BREAKPOINTS.desktop) return 'tablet';
+  return 'desktop';
+};
+
+// Responsive scaling functions
 export const scale = (size: number) => (SCREEN_WIDTH / BASE_WIDTH) * size;
 
 export const verticalScale = (size: number) => (SCREEN_HEIGHT / BASE_HEIGHT) * size;
 
 export const moderateScale = (size: number, factor: number = 0.5) =>
   size + (scale(size) - size) * factor;
+
+// Responsive size based on device type
+export const responsiveSize = (phone: number, tablet: number, desktop?: number) => {
+  const deviceType = getDeviceType();
+  switch (deviceType) {
+    case 'phone':
+      return moderateScale(phone);
+    case 'tablet':
+      return moderateScale(tablet);
+    case 'desktop':
+      return moderateScale(desktop || tablet);
+    default:
+      return moderateScale(phone);
+  }
+};

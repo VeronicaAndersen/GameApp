@@ -3,18 +3,25 @@ import { GameState, CharacterType } from '../types';
 import { INITIAL_STATE } from '../constants';
 import { getCharacterProgress, updateCharacterProgress } from '../utils/storage';
 
+export interface UsePersistentGameStateReturn {
+  gameState: GameState;
+  setGameState: React.Dispatch<React.SetStateAction<GameState>>;
+  selectCharacter: (type: CharacterType) => Promise<void>;
+  isLoading: boolean;
+}
+
 /**
  * Custom hook for managing game state with persistence per character
  * @returns Game state, setter, and character selection handler
  */
-export function usePersistentGameState() {
+export function usePersistentGameState(): UsePersistentGameStateReturn {
   const [gameState, setGameState] = useState<GameState>(INITIAL_STATE);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   /**
    * Loads progress for a specific character from storage
    */
-  const loadCharacterData = useCallback(async (characterType: CharacterType) => {
+  const loadCharacterData = useCallback(async (characterType: CharacterType): Promise<void> => {
     setIsLoading(true);
     try {
       const progress = await getCharacterProgress(characterType);
@@ -33,7 +40,7 @@ export function usePersistentGameState() {
   /**
    * Saves current character progress to storage
    */
-  const saveCurrentProgress = useCallback(async () => {
+  const saveCurrentProgress = useCallback(async (): Promise<void> => {
     if (gameState.character) {
       const { character, ...progress } = gameState;
       await updateCharacterProgress(character, progress);
@@ -44,7 +51,7 @@ export function usePersistentGameState() {
    * Handles character selection and loads their saved progress
    */
   const selectCharacter = useCallback(
-    async (type: CharacterType) => {
+    async (type: CharacterType): Promise<void> => {
       await loadCharacterData(type);
     },
     [loadCharacterData]

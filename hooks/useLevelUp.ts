@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Animated } from 'react-native';
 import { GameState } from '../types';
 import { useLevelUpAnimation } from './useLevelUpAnimation';
 import {
@@ -6,6 +7,11 @@ import {
   calculateXpProgress,
   shouldLevelUp,
 } from '../utils/levelCalculations';
+
+export interface UseLevelUpReturn {
+  levelUpAnim: Animated.Value;
+  xpProgress: number;
+}
 
 /**
  * Custom hook for managing level-up logic and animations
@@ -16,7 +22,7 @@ import {
 export function useLevelUp(
   gameState: GameState,
   setGameState: React.Dispatch<React.SetStateAction<GameState>>
-) {
+): UseLevelUpReturn {
   const { levelUpAnim, playLevelUpAnimation } = useLevelUpAnimation();
   const xpProgress = calculateXpProgress(gameState.experience);
 

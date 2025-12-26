@@ -2,22 +2,22 @@ import React from 'react';
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CharacterIcon } from '../components/CharacterIcon';
-import { CharacterType } from '../types';
+import { CharacterType, Dimensions } from '../types';
 import { CHARACTERS } from '../constants';
 import { scale, moderateScale } from '../utils/responsive';
 import { styles } from '../styles';
 
-interface CharacterSelectionScreenProps {
-  dimensions: { width: number; height: number };
+export interface CharacterSelectionScreenProps {
+  dimensions: Dimensions;
   isDarkMode: boolean;
-  onSelectCharacter: (type: CharacterType) => void | Promise<void>;
+  onSelectCharacter: (type: CharacterType) => Promise<void>;
 }
 
 export function CharacterSelectionScreen({
   dimensions,
   isDarkMode,
   onSelectCharacter,
-}: CharacterSelectionScreenProps) {
+}: CharacterSelectionScreenProps): React.JSX.Element {
   const isTablet = dimensions.width >= 768;
 
   return (
@@ -40,7 +40,7 @@ export function CharacterSelectionScreen({
               isTablet && styles.tabletTitle,
             ]}
           >
-            Choose Your Character!
+            Välj din karaktär
           </Text>
           <Text
             style={[
@@ -49,7 +49,7 @@ export function CharacterSelectionScreen({
               isTablet && styles.tabletSubtitle,
             ]}
           >
-            Pick a character to start your adventure
+            Sedan startar ditt äventyr
           </Text>
 
           <View style={styles.characterList}>
@@ -63,6 +63,9 @@ export function CharacterSelectionScreen({
                 ]}
                 onPress={() => onSelectCharacter(character.type)}
                 activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel={`Select ${character.name}`}
+                accessibilityHint={`Choose ${character.name} as your character to begin the adventure`}
               >
                 <View
                   style={[
