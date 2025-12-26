@@ -23,13 +23,33 @@ export const getDeviceType = (): 'phone' | 'tablet' | 'desktop' => {
   return 'desktop';
 };
 
-// Responsive scaling functions
-export const scale = (size: number) => (SCREEN_WIDTH / BASE_WIDTH) * size;
+// Responsive scaling functions with desktop optimization
+export const scale = (size: number) => {
+  const baseScale = (SCREEN_WIDTH / BASE_WIDTH) * size;
+  // Apply 0.7x scaling for desktop to make everything more compact
+  if (SCREEN_WIDTH >= BREAKPOINTS.desktop) {
+    return baseScale * 0.7;
+  }
+  return baseScale;
+};
 
-export const verticalScale = (size: number) => (SCREEN_HEIGHT / BASE_HEIGHT) * size;
+export const verticalScale = (size: number) => {
+  const baseScale = (SCREEN_HEIGHT / BASE_HEIGHT) * size;
+  // Apply 0.7x scaling for desktop
+  if (SCREEN_WIDTH >= BREAKPOINTS.desktop) {
+    return baseScale * 0.7;
+  }
+  return baseScale;
+};
 
-export const moderateScale = (size: number, factor: number = 0.5) =>
-  size + (scale(size) - size) * factor;
+export const moderateScale = (size: number, factor: number = 0.5) => {
+  const scaled = size + (scale(size) - size) * factor;
+  // Additional 0.85x reduction for desktop
+  if (SCREEN_WIDTH >= BREAKPOINTS.desktop) {
+    return scaled * 0.85;
+  }
+  return scaled;
+};
 
 // Responsive size based on device type
 export const responsiveSize = (phone: number, tablet: number, desktop?: number) => {

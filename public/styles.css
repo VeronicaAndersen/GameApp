@@ -38,11 +38,36 @@ body {
 }
 
 @media screen and (min-width: 1024px) {
-  /* Desktop styles */
+  /* Desktop styles - Compact layout */
   #root {
-    font-size: 20px;
-    max-width: 1440px;
+    font-size: 14px;
+    max-width: 480px;
     margin: 0 auto;
+    padding: 1rem 0.75rem;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+
+  body {
+    padding: 1rem 0.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  /* Large desktop styles - Still compact */
+  #root {
+    max-width: 520px;
+    padding: 1.25rem 1rem;
+    transform: scale(0.9);
+  }
+
+  body {
+    padding: 1.5rem 1rem;
   }
 }
 
@@ -96,5 +121,76 @@ html {
     padding-right: env(safe-area-inset-right);
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  button:hover,
+  [role="button"]:hover {
+    cursor: pointer;
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+  }
+
+  button:active,
+  [role="button"]:active {
+    transform: translateY(0);
+    transition: all 0.1s ease;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  button,
+  [role="button"],
+  a {
+    transition: all 0.2s ease;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Desktop compact mode - scale down all content */
+@media screen and (min-width: 1024px) {
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.5);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.7);
+  }
+
+  /* Reduce spacing for compact layout */
+  #root > * {
+    letter-spacing: -0.01em;
+  }
+
+  /* Make buttons more compact */
+  button,
+  [role="button"] {
+    min-height: 36px;
+    padding: 6px 12px;
+  }
+
+  /* Compact text inputs */
+  input {
+    padding: 8px 12px;
+    font-size: 14px;
   }
 }

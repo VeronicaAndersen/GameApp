@@ -16,6 +16,7 @@ import { EventNotification } from '../components/EventNotification';
 import { SnoringAnimation } from '../components/SnoringAnimation';
 import { ActionEmojis, ActionType } from '../components/ActionEmojis';
 import { useTimeoutManager } from '../utils/timeoutManager';
+import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
 export interface GameScreenProps {
   dimensions: Dimensions;
@@ -119,6 +120,21 @@ export function GameScreen({
       ANIMATION_CONFIG.timeouts.actionEmojisDisplay
     );
   }, [handleMedicine, playShakeAnimation, timeoutManager]);
+
+  const handleOpenRenameModal = useCallback(() => {
+    setShowRenameModal(true);
+  }, []);
+
+  // Enable keyboard shortcuts for desktop users
+  useKeyboardShortcuts({
+    onEat: handleEatWithAnimation,
+    onPlay: handlePlayWithAnimation,
+    onSleep: handleSleepWithAnimation,
+    onExercise: handleExerciseWithAnimation,
+    onPet: handlePetWithAnimation,
+    onMedicine: handleMedicineWithAnimation,
+    onRename: handleOpenRenameModal,
+  });
 
   return (
     <SafeAreaView
