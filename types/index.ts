@@ -12,6 +12,10 @@ export interface CharacterProgress {
   experience: number;
   hunger: number;
   happiness: number;
+  energy: number;
+  health: number;
+  lastInteraction: number;
+  customName?: string;
 }
 
 export interface GameState {
@@ -20,6 +24,10 @@ export interface GameState {
   experience: number;
   hunger: number;
   happiness: number;
+  energy: number;
+  health: number;
+  lastInteraction: number;
+  customName?: string;
 }
 
 export type CharacterProgressMap = {

@@ -66,7 +66,7 @@ export function usePersistentGameState(): UsePersistentGameStateReturn {
     }
     // Intentionally not including saveCurrentProgress to avoid infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameState.level, gameState.experience, gameState.hunger, gameState.happiness, gameState.character, isLoading]);
+  }, [gameState.level, gameState.experience, gameState.hunger, gameState.happiness, gameState.energy, gameState.health, gameState.customName, gameState.character, isLoading]);
 
   return {
     gameState,

@@ -30,8 +30,20 @@ export const INITIAL_STATE: GameState = {
   experience: 0,
   hunger: 50,
   happiness: 50,
+  energy: 50,
+  health: 100,
+  lastInteraction: Date.now(),
 };
 
 export const XP_PER_LEVEL = 100;
 export const MAX_HUNGER = 100;
 export const MAX_HAPPINESS = 100;
+export const MAX_ENERGY = 100;
+export const MAX_HEALTH = 100;
+
+// Stat decay rates (per hour)
+export const DECAY_RATES = {
+  hunger: 10,
+  happiness: 8,
+  energy: 12,
+} as const;

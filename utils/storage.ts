@@ -24,7 +24,11 @@ function isValidProgress(data: unknown): data is CharacterProgress {
     typeof progress.level === 'number' &&
     typeof progress.experience === 'number' &&
     typeof progress.hunger === 'number' &&
-    typeof progress.happiness === 'number'
+    typeof progress.happiness === 'number' &&
+    typeof progress.energy === 'number' &&
+    typeof progress.health === 'number' &&
+    typeof progress.lastInteraction === 'number' &&
+    (progress.customName === undefined || typeof progress.customName === 'string')
   );
 }
 
@@ -48,6 +52,9 @@ function getDefaultProgress(): CharacterProgress {
     experience: INITIAL_STATE.experience,
     hunger: INITIAL_STATE.hunger,
     happiness: INITIAL_STATE.happiness,
+    energy: INITIAL_STATE.energy,
+    health: INITIAL_STATE.health,
+    lastInteraction: Date.now(),
   };
 }
 

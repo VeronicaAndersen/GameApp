@@ -167,16 +167,16 @@ export const styles = StyleSheet.create({
   },
   characterDisplay: {
     alignItems: 'center',
-    marginBottom: verticalScale(32),
+    marginBottom: verticalScale(20),
   },
   characterDisplayContainer: {
     alignItems: 'center',
     position: 'relative',
   },
   characterDisplayEmoji: {
-    width: scale(150),
-    height: scale(150),
-    borderRadius: scale(75),
+    width: scale(120),
+    height: scale(120),
+    borderRadius: scale(60),
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'visible',
@@ -192,8 +192,8 @@ export const styles = StyleSheet.create({
     overflow: 'visible',
     width: 'auto',
     height: 'auto',
-    minWidth: scale(150),
-    minHeight: scale(110),
+    minWidth: scale(120),
+    minHeight: scale(90),
   },
   levelUpBadge: {
     position: 'absolute',
@@ -209,11 +209,11 @@ export const styles = StyleSheet.create({
     fontSize: moderateScale(16),
   },
   statsContainer: {
-    marginBottom: verticalScale(32),
-    gap: verticalScale(24),
+    marginBottom: verticalScale(20),
+    gap: verticalScale(16),
   },
   levelContainer: {
-    marginBottom: verticalScale(16),
+    marginBottom: verticalScale(12),
   },
   levelText: {
     fontSize: moderateScale(24),
@@ -245,33 +245,33 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   statRow: {
-    gap: verticalScale(16),
+    gap: verticalScale(12),
   },
   statItem: {
-    marginBottom: verticalScale(8),
+    marginBottom: verticalScale(4),
   },
   statLabel: {
-    fontSize: moderateScale(16),
+    fontSize: moderateScale(14),
     color: '#666666',
-    marginBottom: verticalScale(8),
+    marginBottom: verticalScale(4),
     fontWeight: '600',
   },
   statBarContainer: {
-    height: verticalScale(16),
+    height: verticalScale(12),
     backgroundColor: '#E0E0E0',
-    borderRadius: moderateScale(8),
+    borderRadius: moderateScale(6),
     overflow: 'hidden',
-    marginBottom: verticalScale(4),
+    marginBottom: verticalScale(2),
   },
   darkStatBarContainer: {
     backgroundColor: '#333333',
   },
   statBar: {
     height: '100%',
-    borderRadius: moderateScale(8),
+    borderRadius: moderateScale(6),
   },
   statValue: {
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(12),
     color: '#666666',
     textAlign: 'right',
   },
@@ -283,11 +283,11 @@ export const styles = StyleSheet.create({
   },
   actionButton: {
     flex: 1,
-    borderRadius: moderateScale(16),
-    paddingVertical: verticalScale(20),
+    borderRadius: moderateScale(12),
+    paddingVertical: verticalScale(14),
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: scale(140),
+    minWidth: scale(100),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -302,12 +302,12 @@ export const styles = StyleSheet.create({
     minWidth: scale(200),
   },
   actionEmoji: {
-    fontSize: moderateScale(40),
-    marginBottom: verticalScale(8),
+    fontSize: moderateScale(32),
+    marginBottom: verticalScale(4),
   },
   actionButtonText: {
     color: '#FFFFFF',
-    fontSize: moderateScale(18),
+    fontSize: moderateScale(14),
     fontWeight: 'bold',
   },
   tabletActionButtonText: {
