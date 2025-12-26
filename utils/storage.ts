@@ -1,7 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CharacterType, CharacterProgress, CharacterProgressMap, isCharacterType } from '../types';
 import { INITIAL_STATE } from '../constants';
 import { validateCharacterProgress } from './validation';
+import { PlatformStorage } from './platformStorage';
 
 const STORAGE_KEY = '@game_character_progress';
 
@@ -66,7 +66,7 @@ function getDefaultProgress(): CharacterProgress {
  */
 export async function loadCharacterProgress(): Promise<CharacterProgressMap | null> {
   try {
-    const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
+    const jsonValue = await PlatformStorage.getItem(STORAGE_KEY);
     if (jsonValue === null) return null;
 
     const parsed = JSON.parse(jsonValue);
@@ -109,7 +109,7 @@ export async function saveCharacterProgress(
       throw new StorageError('Invalid progress map structure');
     }
     const jsonValue = JSON.stringify(progressMap);
-    await AsyncStorage.setItem(STORAGE_KEY, jsonValue);
+    await PlatformStorage.setItem(STORAGE_KEY, jsonValue);
   } catch (error) {
     console.error('Error saving character progress:', error);
     throw new StorageError('Failed to save character progress', error);
@@ -164,7 +164,7 @@ export async function updateCharacterProgress(
  */
 export async function clearAllProgress(): Promise<void> {
   try {
-    await AsyncStorage.removeItem(STORAGE_KEY);
+    await PlatformStorage.removeItem(STORAGE_KEY);
   } catch (error) {
     console.error('Error clearing character progress:', error);
     throw new StorageError('Failed to clear character progress', error);

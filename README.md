@@ -82,6 +82,48 @@ You've successfully run and modified your React Native App. :partying_face:
 - If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
 - If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
 
+## Step 4: Deploy to Vercel (Web)
+
+This app can be deployed as a web application to Vercel using React Native Web.
+
+### Local Web Development
+
+To run the web version locally:
+
+```sh
+# Using npm
+npm run web
+
+# This will start the webpack dev server on http://localhost:3000
+```
+
+### Building for Production
+
+To create a production build:
+
+```sh
+# Using npm
+npm run build:web
+
+# This creates an optimized build in the /dist folder
+```
+
+### Deploying to Vercel
+
+1. **Connect your repository** to Vercel (GitHub, GitLab, or Bitbucket)
+2. **Configure the project** (Vercel will auto-detect the configuration from vercel.json):
+   - Build Command: `npm run build:web`
+   - Output Directory: `dist`
+   - Install Command: `npm install`
+
+3. **Deploy** - Vercel will automatically deploy on every push to your main branch
+
+**Environment Variables** (if needed):
+- Currently this app doesn't require environment variables
+- If you add API keys or backend URLs, add them in Vercel's dashboard
+
+**Note**: The app uses localStorage for web (automatically detected via Platform.OS) and AsyncStorage for native platforms.
+
 # Troubleshooting
 
 If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
