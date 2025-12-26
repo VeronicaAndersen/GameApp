@@ -1,13 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { GameState, CharacterType } from '../types';
 import { INITIAL_STATE } from '../constants';
 import { getCharacterProgress, updateCharacterProgress } from '../utils/storage';
+import { validateCharacterProgress, sanitizeCharacterProgress } from '../utils/validation';
 
 export interface UsePersistentGameStateReturn {
   gameState: GameState;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>;
   selectCharacter: (type: CharacterType) => Promise<void>;
   isLoading: boolean;
+  error: string | null;
 }
 
 /**
@@ -17,20 +19,31 @@ export interface UsePersistentGameStateReturn {
 export function usePersistentGameState(): UsePersistentGameStateReturn {
   const [gameState, setGameState] = useState<GameState>(INITIAL_STATE);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const saveTimeoutRef = useRef<NodeJS.Timeout>();
 
   /**
    * Loads progress for a specific character from storage
    */
   const loadCharacterData = useCallback(async (characterType: CharacterType): Promise<void> => {
     setIsLoading(true);
+    setError(null);
     try {
       const progress = await getCharacterProgress(characterType);
-      setGameState({
-        character: characterType,
-        ...progress,
-      });
-    } catch (error) {
-      console.error('Error loading character data:', error);
+
+      // Validate loaded data
+      const validation = validateCharacterProgress(progress);
+      if (!validation.valid) {
+        console.warn('Invalid character data loaded, using sanitized version:', validation.error);
+        const sanitized = sanitizeCharacterProgress(progress);
+        setGameState({ character: characterType, ...sanitized });
+      } else {
+        setGameState({ character: characterType, ...validation.data });
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error loading character';
+      console.error('Error loading character data:', err);
+      setError(errorMessage);
       setGameState({ ...INITIAL_STATE, character: characterType });
     } finally {
       setIsLoading(false);
@@ -38,12 +51,28 @@ export function usePersistentGameState(): UsePersistentGameStateReturn {
   }, []);
 
   /**
-   * Saves current character progress to storage
+   * Saves current character progress to storage with error handling
    */
   const saveCurrentProgress = useCallback(async (): Promise<void> => {
-    if (gameState.character) {
+    if (!gameState.character) return;
+
+    try {
       const { character, ...progress } = gameState;
-      await updateCharacterProgress(character, progress);
+
+      // Validate before saving
+      const validation = validateCharacterProgress(progress);
+      if (!validation.valid) {
+        console.error('Invalid game state, cannot save:', validation.error);
+        return;
+      }
+
+      await updateCharacterProgress(character, validation.data);
+      setError(null);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error saving progress';
+      console.error('Error saving character progress:', err);
+      setError(errorMessage);
+      // Don't throw - allow game to continue even if save fails
     }
   }, [gameState]);
 
@@ -58,20 +87,46 @@ export function usePersistentGameState(): UsePersistentGameStateReturn {
   );
 
   /**
-   * Auto-save whenever game state changes
+   * Auto-save with debouncing and error handling
    */
   useEffect(() => {
-    if (gameState.character !== null && !isLoading) {
-      saveCurrentProgress();
+    if (gameState.character === null || isLoading) return;
+
+    // Debounce saves - wait 500ms after last change
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
     }
-    // Intentionally not including saveCurrentProgress to avoid infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameState.level, gameState.experience, gameState.hunger, gameState.happiness, gameState.energy, gameState.health, gameState.customName, gameState.character, isLoading]);
+
+    saveTimeoutRef.current = setTimeout(() => {
+      // Fire and forget with error handling
+      saveCurrentProgress().catch(err => {
+        console.error('Auto-save failed:', err);
+      });
+    }, 500);
+
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, [
+    gameState.level,
+    gameState.experience,
+    gameState.hunger,
+    gameState.happiness,
+    gameState.energy,
+    gameState.health,
+    gameState.customName,
+    gameState.character,
+    isLoading,
+    saveCurrentProgress,
+  ]);
 
   return {
     gameState,
     setGameState,
     selectCharacter,
     isLoading,
+    error,
   };
 }

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Text, View, ScrollView, TouchableOpacity, Animated, TextInput, Modal, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CharacterIcon } from '../components/CharacterIcon';
 import { GameState, Dimensions } from '../types';
 import { CHARACTERS, INITIAL_STATE, XP_PER_LEVEL, MAX_HUNGER, MAX_HAPPINESS, MAX_ENERGY, MAX_HEALTH } from '../constants';
+import { ANIMATION_CONFIG } from '../constants/animations';
 import { scale, moderateScale, verticalScale } from '../utils/responsive';
 import { styles } from '../styles';
 import { useGameActions } from '../hooks/useGameActions';
@@ -12,6 +13,9 @@ import { useStatDecay } from '../hooks/useStatDecay';
 import { useRandomEvents } from '../hooks/useRandomEvents';
 import { useCharacterAnimation } from '../hooks/useCharacterAnimation';
 import { EventNotification } from '../components/EventNotification';
+import { SnoringAnimation } from '../components/SnoringAnimation';
+import { ActionEmojis, ActionType } from '../components/ActionEmojis';
+import { useTimeoutManager } from '../utils/timeoutManager';
 
 export interface GameScreenProps {
   dimensions: Dimensions;
@@ -27,9 +31,23 @@ export function GameScreen({
   setGameState,
 }: GameScreenProps): React.JSX.Element {
   const isTablet = dimensions.width >= 768;
-  const character = CHARACTERS.find((c) => c.type === gameState.character)!;
+  const character = CHARACTERS.find((c) => c.type === gameState.character);
+
+  // Validate character exists - prevent runtime errors
+  if (!character) {
+    console.error('Character not found:', gameState.character);
+    setGameState(INITIAL_STATE);
+    return <></>;
+  }
+
   const [showRenameModal, setShowRenameModal] = useState(false);
   const [newName, setNewName] = useState('');
+  const [isSnoring, setIsSnoring] = useState(false);
+  const [showActionEmojis, setShowActionEmojis] = useState(false);
+  const [currentActionType, setCurrentActionType] = useState<ActionType>('eat');
+
+  // Use timeout manager for automatic cleanup
+  const timeoutManager = useTimeoutManager();
 
   const { bounceAnim, handleEat, handlePlay, handleSleep, handleExercise, handlePet, handleMedicine } = useGameActions(setGameState);
   const { levelUpAnim, xpProgress } = useLevelUp(gameState, setGameState);
@@ -37,47 +55,70 @@ export function GameScreen({
   const { currentEvent, dismissEvent } = useRandomEvents(gameState, setGameState);
   const { characterScale, characterRotate, playJumpAnimation, playShakeAnimation, playSpinAnimation, playHappyAnimation } = useCharacterAnimation();
 
-  const handleRename = () => {
+  const handleRename = useCallback(() => {
     if (newName.trim()) {
       setGameState(prev => ({ ...prev, customName: newName.trim() }));
       setShowRenameModal(false);
       setNewName('');
       playHappyAnimation();
     }
-  };
+  }, [newName, setGameState, playHappyAnimation]);
 
   const displayName = gameState.customName || character.name;
 
-  // Wrap action handlers with animations
-  const handleEatWithAnimation = () => {
+  // Wrap action handlers with animations and managed timeouts
+  const handleEatWithAnimation = useCallback(() => {
     handleEat();
     playJumpAnimation();
-  };
+    setCurrentActionType('eat');
+    setShowActionEmojis(true);
+    timeoutManager.setTimeout(
+      () => setShowActionEmojis(false),
+      ANIMATION_CONFIG.timeouts.actionEmojisDisplay
+    );
+  }, [handleEat, playJumpAnimation, timeoutManager]);
 
-  const handlePlayWithAnimation = () => {
+  const handlePlayWithAnimation = useCallback(() => {
     handlePlay();
     playHappyAnimation();
-  };
+    setCurrentActionType('play');
+    setShowActionEmojis(true);
+    timeoutManager.setTimeout(
+      () => setShowActionEmojis(false),
+      ANIMATION_CONFIG.timeouts.actionEmojisDisplay
+    );
+  }, [handlePlay, playHappyAnimation, timeoutManager]);
 
-  const handleSleepWithAnimation = () => {
+  const handleSleepWithAnimation = useCallback(() => {
     handleSleep();
     playShakeAnimation();
-  };
+    setIsSnoring(true);
+    timeoutManager.setTimeout(
+      () => setIsSnoring(false),
+      ANIMATION_CONFIG.timeouts.snoringDisplay
+    );
+  }, [handleSleep, playShakeAnimation, timeoutManager]);
 
-  const handleExerciseWithAnimation = () => {
+  const handleExerciseWithAnimation = useCallback(() => {
     handleExercise();
     playSpinAnimation();
-  };
+  }, [handleExercise, playSpinAnimation]);
 
-  const handlePetWithAnimation = () => {
+  const handlePetWithAnimation = useCallback(() => {
     handlePet();
     playHappyAnimation();
-  };
+  }, [handlePet, playHappyAnimation]);
 
-  const handleMedicineWithAnimation = () => {
+  const handleMedicineWithAnimation = useCallback(() => {
     handleMedicine();
     playShakeAnimation();
-  };
+    setCurrentActionType('medicine');
+    setShowActionEmojis(true);
+    timeoutManager.setTimeout(
+      () => setShowActionEmojis(false),
+      ANIMATION_CONFIG.timeouts.actionEmojisDisplay
+    );
+  }, [handleMedicine, playShakeAnimation, timeoutManager]);
 
   return (
     <SafeAreaView
@@ -165,6 +206,10 @@ export function GameScreen({
                   isTablet={isTablet}
                   containerSize={isTablet ? scale(200) : scale(120)}
                 />
+                {/* Snoring Animation */}
+                <SnoringAnimation visible={isSnoring} />
+                {/* Action Emojis */}
+                <ActionEmojis visible={showActionEmojis} actionType={currentActionType} />
               </View>
               <Animated.View
                 style={[
@@ -380,9 +425,11 @@ export function GameScreen({
                   styles.actionButton,
                   { backgroundColor: '#FF6B6B' },
                   isTablet && styles.tabletActionButton,
+                  gameState.hunger >= MAX_HUNGER && styles.disabledActionButton,
                 ]}
                 onPress={handleEatWithAnimation}
                 activeOpacity={0.8}
+                disabled={gameState.hunger >= MAX_HUNGER}
                 accessibilityRole="button"
                 accessibilityLabel={`Feed ${displayName}`}
                 accessibilityHint={`Increase hunger by 20 points, decrease energy by 5, and gain 10 experience`}
@@ -404,9 +451,11 @@ export function GameScreen({
                   styles.actionButton,
                   { backgroundColor: '#4ECDC4' },
                   isTablet && styles.tabletActionButton,
+                  gameState.happiness >= MAX_HAPPINESS && styles.disabledActionButton,
                 ]}
                 onPress={handlePlayWithAnimation}
                 activeOpacity={0.8}
+                disabled={gameState.happiness >= MAX_HAPPINESS}
                 accessibilityRole="button"
                 accessibilityLabel={`Play with ${character.name}`}
                 accessibilityHint={`Increase happiness by 20 points, decrease energy by 10 and hunger by 5, and gain 15 experience`}
@@ -428,9 +477,11 @@ export function GameScreen({
                   styles.actionButton,
                   { backgroundColor: '#9370DB' },
                   isTablet && styles.tabletActionButton,
+                  gameState.energy >= MAX_ENERGY && styles.disabledActionButton,
                 ]}
                 onPress={handleSleepWithAnimation}
                 activeOpacity={0.8}
+                disabled={gameState.energy >= MAX_ENERGY}
                 accessibilityRole="button"
                 accessibilityLabel={`Let ${character.name} sleep`}
                 accessibilityHint={`Increase energy by 30 points, decrease hunger by 10, and gain 5 experience`}
@@ -454,9 +505,11 @@ export function GameScreen({
                   styles.actionButton,
                   { backgroundColor: '#FF8C42' },
                   isTablet && styles.tabletActionButton,
+                  gameState.energy < 20 && styles.disabledActionButton,
                 ]}
                 onPress={handleExerciseWithAnimation}
                 activeOpacity={0.8}
+                disabled={gameState.energy < 20}
                 accessibilityRole="button"
                 accessibilityLabel={`Exercise with ${character.name}`}
                 accessibilityHint={`Increase health by 15 and happiness by 10, decrease energy by 20 and hunger by 15, and gain 20 experience`}
@@ -478,9 +531,11 @@ export function GameScreen({
                   styles.actionButton,
                   { backgroundColor: '#FF69B4' },
                   isTablet && styles.tabletActionButton,
+                  gameState.happiness >= MAX_HAPPINESS && styles.disabledActionButton,
                 ]}
                 onPress={handlePetWithAnimation}
                 activeOpacity={0.8}
+                disabled={gameState.happiness >= MAX_HAPPINESS}
                 accessibilityRole="button"
                 accessibilityLabel={`Pet ${character.name}`}
                 accessibilityHint={`Increase happiness by 15 and health by 5, and gain 8 experience`}
@@ -502,9 +557,11 @@ export function GameScreen({
                   styles.actionButton,
                   { backgroundColor: '#87CEEB' },
                   isTablet && styles.tabletActionButton,
+                  gameState.health >= MAX_HEALTH && styles.disabledActionButton,
                 ]}
                 onPress={handleMedicineWithAnimation}
                 activeOpacity={0.8}
+                disabled={gameState.health >= MAX_HEALTH}
                 accessibilityRole="button"
                 accessibilityLabel={`Give ${character.name} medicine`}
                 accessibilityHint={`Increase health by 30 points, decrease happiness by 10, and gain 5 experience`}

@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CharacterType, CharacterProgress, CharacterProgressMap, isCharacterType } from '../types';
 import { INITIAL_STATE } from '../constants';
+import { validateCharacterProgress } from './validation';
 
 const STORAGE_KEY = '@game_character_progress';
 
@@ -70,8 +71,20 @@ export async function loadCharacterProgress(): Promise<CharacterProgressMap | nu
 
     const parsed = JSON.parse(jsonValue);
     if (!isValidProgressMap(parsed)) {
-      console.warn('Invalid progress data in storage, returning null');
-      return null;
+      console.warn('Invalid progress data in storage, attempting to salvage');
+      // Try to salvage what we can
+      const salvaged: Partial<CharacterProgressMap> = {};
+      for (const [key, value] of Object.entries(parsed)) {
+        if (isCharacterType(key)) {
+          const validation = validateCharacterProgress(value);
+          if (validation.valid) {
+            salvaged[key as CharacterType] = validation.data;
+          } else {
+            console.warn(`Skipping invalid progress for ${key}:`, validation.error);
+          }
+        }
+      }
+      return Object.keys(salvaged).length > 0 ? salvaged as CharacterProgressMap : null;
     }
     return parsed;
   } catch (error) {
@@ -130,13 +143,14 @@ export async function updateCharacterProgress(
   characterType: CharacterType,
   progress: CharacterProgress
 ): Promise<void> {
-  if (!isValidProgress(progress)) {
-    throw new StorageError('Invalid progress data');
+  const validation = validateCharacterProgress(progress);
+  if (!validation.valid) {
+    throw new StorageError(`Invalid progress data: ${validation.error}`);
   }
 
   try {
     const allProgress = (await loadCharacterProgress()) ?? ({} as CharacterProgressMap);
-    allProgress[characterType] = progress;
+    allProgress[characterType] = validation.data;
     await saveCharacterProgress(allProgress);
   } catch (error) {
     console.error(`Error updating progress for ${characterType}:`, error);

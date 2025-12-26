@@ -297,6 +297,11 @@ export const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  disabledActionButton: {
+    opacity: 0.4,
+    shadowOpacity: 0,
+    elevation: 0,
+  },
   tabletActionButton: {
     paddingVertical: verticalScale(24),
     minWidth: scale(200),

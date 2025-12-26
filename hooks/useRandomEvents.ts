@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { GameState } from '../types';
 import { MAX_HUNGER, MAX_HAPPINESS, MAX_ENERGY, MAX_HEALTH } from '../constants';
 
@@ -93,37 +93,51 @@ export function useRandomEvents(
   setGameState: React.Dispatch<React.SetStateAction<GameState>>
 ): UseRandomEventsReturn {
   const [currentEvent, setCurrentEvent] = useState<RandomEvent | null>(null);
+  const characterRef = useRef(gameState.character);
 
   const dismissEvent = useCallback((): void => {
     setCurrentEvent(null);
   }, []);
 
+  // Memoize the event trigger function
   const triggerRandomEvent = useCallback((): void => {
-    if (!gameState.character || currentEvent) return;
+    // Only trigger if no event is currently showing
+    setCurrentEvent(prevEvent => {
+      if (prevEvent) return prevEvent;
 
-    const randomIndex = Math.floor(Math.random() * RANDOM_EVENTS.length);
-    const eventTemplate = RANDOM_EVENTS[randomIndex];
+      const randomIndex = Math.floor(Math.random() * RANDOM_EVENTS.length);
+      const eventTemplate = RANDOM_EVENTS[randomIndex];
 
-    const event: RandomEvent = {
-      ...eventTemplate,
-      id: `event-${Date.now()}`,
-    };
+      const event: RandomEvent = {
+        ...eventTemplate,
+        id: `event-${Date.now()}`,
+      };
 
-    setCurrentEvent(event);
+      // Apply event effects using functional update
+      setGameState((prev) => ({
+        ...prev,
+        hunger: Math.max(0, Math.min(MAX_HUNGER, prev.hunger + (event.effects.hunger || 0))),
+        happiness: Math.max(0, Math.min(MAX_HAPPINESS, prev.happiness + (event.effects.happiness || 0))),
+        energy: Math.max(0, Math.min(MAX_ENERGY, prev.energy + (event.effects.energy || 0))),
+        health: Math.max(0, Math.min(MAX_HEALTH, prev.health + (event.effects.health || 0))),
+        experience: prev.experience + (event.effects.experience || 0),
+      }));
 
-    // Apply event effects
-    setGameState((prev) => ({
-      ...prev,
-      hunger: Math.max(0, Math.min(MAX_HUNGER, prev.hunger + (event.effects.hunger || 0))),
-      happiness: Math.max(0, Math.min(MAX_HAPPINESS, prev.happiness + (event.effects.happiness || 0))),
-      energy: Math.max(0, Math.min(MAX_ENERGY, prev.energy + (event.effects.energy || 0))),
-      health: Math.max(0, Math.min(MAX_HEALTH, prev.health + (event.effects.health || 0))),
-      experience: prev.experience + (event.effects.experience || 0),
-    }));
-  }, [gameState.character, currentEvent, setGameState]);
+      return event;
+    });
+  }, [setGameState]);
 
   useEffect(() => {
     if (!gameState.character) return;
+
+    // Reset if character changed
+    if (characterRef.current !== gameState.character) {
+      characterRef.current = gameState.character;
+      setCurrentEvent(null);
+    }
+
+    // Don't schedule new event if one is showing
+    if (currentEvent) return;
 
     // Random interval between 3-7 minutes (180000-420000ms)
     const randomDelay = Math.floor(Math.random() * (420000 - 180000 + 1)) + 180000;

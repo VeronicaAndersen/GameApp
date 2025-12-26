@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import { RandomEvent } from '../hooks/useRandomEvents';
 import { moderateScale, scale } from '../utils/responsive';
@@ -10,12 +10,26 @@ export interface EventNotificationProps {
   isTablet: boolean;
 }
 
-export function EventNotification({
+export const EventNotification = React.memo<EventNotificationProps>(function EventNotification({
   event,
   onDismiss,
   isDarkMode,
   isTablet,
 }: EventNotificationProps): React.JSX.Element {
+  // Memoize effect entries to prevent recalculation
+  const effectEntries = useMemo(() => {
+    if (!event) return [];
+    return Object.entries(event.effects).filter(([_, value]) => value !== 0);
+  }, [event]);
+
+  const statNames = {
+    hunger: 'Hunger',
+    happiness: 'Glädje',
+    energy: 'Energi',
+    health: 'Hälsa',
+    experience: 'XP',
+  } as const;
+
   if (!event) return <></>;
 
   return (
@@ -55,16 +69,9 @@ export function EventNotification({
 
           {/* Effects display */}
           <View style={styles.effectsContainer}>
-            {Object.entries(event.effects).map(([key, value]) => {
-              if (value === 0) return null;
+            {effectEntries.map(([key, value]) => {
               const isPositive = value > 0;
-              const statName = {
-                hunger: 'Hunger',
-                happiness: 'Glädje',
-                energy: 'Energi',
-                health: 'Hälsa',
-                experience: 'XP',
-              }[key];
+              const statName = statNames[key as keyof typeof statNames];
 
               return (
                 <Text
@@ -105,7 +112,7 @@ export function EventNotification({
       </View>
     </Modal>
   );
-}
+});
 
 const styles = StyleSheet.create({
   overlay: {

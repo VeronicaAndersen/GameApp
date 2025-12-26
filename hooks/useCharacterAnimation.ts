@@ -1,5 +1,6 @@
 import { useRef, useCallback } from 'react';
 import { Animated } from 'react-native';
+import { ANIMATION_CONFIG } from '../constants/animations';
 
 export interface UseCharacterAnimationReturn {
   characterScale: Animated.Value;
@@ -19,30 +20,31 @@ export function useCharacterAnimation(): UseCharacterAnimationReturn {
   const characterRotate = useRef(new Animated.Value(0)).current;
 
   const playJumpAnimation = useCallback((): void => {
+    const config = ANIMATION_CONFIG.character.jump;
     Animated.sequence([
       Animated.parallel([
         Animated.timing(characterScale, {
-          toValue: 1.2,
-          duration: 150,
+          toValue: config.scaleTo,
+          duration: config.duration,
           useNativeDriver: true,
         }),
         Animated.timing(characterRotate, {
-          toValue: -5,
-          duration: 150,
+          toValue: config.rotateTo,
+          duration: config.duration,
           useNativeDriver: true,
         }),
       ]),
       Animated.parallel([
         Animated.spring(characterScale, {
           toValue: 1,
-          friction: 3,
-          tension: 40,
+          friction: config.springFriction,
+          tension: config.springTension,
           useNativeDriver: true,
         }),
         Animated.spring(characterRotate, {
           toValue: 0,
-          friction: 3,
-          tension: 40,
+          friction: config.springFriction,
+          tension: config.springTension,
           useNativeDriver: true,
         }),
       ]),
@@ -50,40 +52,42 @@ export function useCharacterAnimation(): UseCharacterAnimationReturn {
   }, [characterScale, characterRotate]);
 
   const playShakeAnimation = useCallback((): void => {
+    const config = ANIMATION_CONFIG.character.shake;
     Animated.sequence([
       Animated.timing(characterRotate, {
-        toValue: -10,
-        duration: 50,
+        toValue: config.rotateAmounts[0],
+        duration: config.durations[0],
         useNativeDriver: true,
       }),
       Animated.timing(characterRotate, {
-        toValue: 10,
-        duration: 100,
+        toValue: config.rotateAmounts[1],
+        duration: config.durations[1],
         useNativeDriver: true,
       }),
       Animated.timing(characterRotate, {
-        toValue: -10,
-        duration: 100,
+        toValue: config.rotateAmounts[0],
+        duration: config.durations[2],
         useNativeDriver: true,
       }),
       Animated.timing(characterRotate, {
-        toValue: 10,
-        duration: 100,
+        toValue: config.rotateAmounts[1],
+        duration: config.durations[3],
         useNativeDriver: true,
       }),
       Animated.timing(characterRotate, {
         toValue: 0,
-        duration: 50,
+        duration: config.durations[4],
         useNativeDriver: true,
       }),
     ]).start();
   }, [characterRotate]);
 
   const playSpinAnimation = useCallback((): void => {
+    const config = ANIMATION_CONFIG.character.spin;
     Animated.sequence([
       Animated.timing(characterRotate, {
-        toValue: 360,
-        duration: 600,
+        toValue: config.rotateTo,
+        duration: config.duration,
         useNativeDriver: true,
       }),
       Animated.timing(characterRotate, {
@@ -95,36 +99,37 @@ export function useCharacterAnimation(): UseCharacterAnimationReturn {
   }, [characterRotate]);
 
   const playHappyAnimation = useCallback((): void => {
+    const config = ANIMATION_CONFIG.character.happy;
     Animated.sequence([
       Animated.parallel([
         Animated.spring(characterScale, {
-          toValue: 1.15,
-          friction: 2,
-          tension: 40,
+          toValue: config.scaleTo,
+          friction: config.springFriction,
+          tension: config.springTension,
           useNativeDriver: true,
         }),
         Animated.sequence([
           Animated.timing(characterRotate, {
-            toValue: -8,
-            duration: 100,
+            toValue: config.rotateTo[0],
+            duration: config.durations[0],
             useNativeDriver: true,
           }),
           Animated.timing(characterRotate, {
-            toValue: 8,
-            duration: 200,
+            toValue: config.rotateTo[1],
+            duration: config.durations[1],
             useNativeDriver: true,
           }),
           Animated.timing(characterRotate, {
             toValue: 0,
-            duration: 100,
+            duration: config.durations[2],
             useNativeDriver: true,
           }),
         ]),
       ]),
       Animated.spring(characterScale, {
         toValue: 1,
-        friction: 3,
-        tension: 40,
+        friction: config.springFriction,
+        tension: config.springTension,
         useNativeDriver: true,
       }),
     ]).start();
