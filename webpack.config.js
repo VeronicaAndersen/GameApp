@@ -9,7 +9,7 @@ module.exports = (env, argv) => {
     entry: './index.web.js',
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: isProduction ? '[name].[contenthash].js' : 'bundle.js',
+      filename: isProduction ? '[name].[contenthash].js' : '[name].bundle.js',
       chunkFilename: isProduction ? '[name].[contenthash].chunk.js' : '[name].chunk.js',
       clean: true,
     },
@@ -97,7 +97,7 @@ module.exports = (env, argv) => {
         directory: path.join(__dirname, 'public'),
       },
       compress: true,
-      port: 3000,
+      port: 3002,
       hot: true,
       open: true,
     },
