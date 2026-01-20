@@ -1,9 +1,11 @@
 import React, { useMemo } from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { LizardSvg } from './LizardSvg';
 import { CatSvg } from './CatSvg';
 import { UnicornSvg } from './UnicornSvg';
-import { CharacterType } from '../types';
+import { AnimatedCharacter } from './AnimatedCharacter';
+import { LifeStageOverlay } from './LifeStageOverlay';
+import { CharacterType, LifeStage } from '../types';
 import { CHARACTERS } from '../constants';
 import { SVG_ASPECT_RATIOS, SVG_SIZE_MULTIPLIERS } from '../constants/svgAspectRatios';
 
@@ -12,17 +14,25 @@ interface CharacterIconProps {
   size: number;
   isTablet: boolean;
   containerSize?: number;
+  lifeStage?: LifeStage;
+  isSick?: boolean;
+  isDead?: boolean;
+  isSleeping?: boolean;
 }
 
 /**
  * Optimized character icon component with memoization
- * Renders SVG graphics for characters
+ * Renders SVG graphics for characters with life stage animations
  */
 export const CharacterIcon = React.memo<CharacterIconProps>(({
   characterType,
   size,
   isTablet,
   containerSize,
+  lifeStage = 'adult',
+  isSick = false,
+  isDead = false,
+  isSleeping = false,
 }) => {
   const svgSize = useMemo(() => {
     if (containerSize) {
@@ -53,12 +63,27 @@ export const CharacterIcon = React.memo<CharacterIconProps>(({
     }
   };
 
-  return renderCharacter();
+  return (
+    <AnimatedCharacter
+      lifeStage={lifeStage}
+      isSick={isSick}
+      isDead={isDead}
+      isSleeping={isSleeping}
+    >
+      <View style={styles.characterContainer}>
+        {renderCharacter()}
+        <LifeStageOverlay lifeStage={lifeStage} characterSize={svgSize} />
+      </View>
+    </AnimatedCharacter>
+  );
 });
 
 CharacterIcon.displayName = 'CharacterIcon';
 
 const styles = StyleSheet.create({
+  characterContainer: {
+    position: 'relative',
+  },
   emojiText: {
     textAlign: 'center',
   },

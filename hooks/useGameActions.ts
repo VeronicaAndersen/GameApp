@@ -1,18 +1,20 @@
 import { useCallback } from 'react';
 import { Animated } from 'react-native';
 import { GameState } from '../types';
-import { MAX_HUNGER, MAX_HAPPINESS, MAX_ENERGY, MAX_HEALTH } from '../constants';
+import { MAX_HUNGER, MAX_HAPPINESS, MAX_ENERGY, MAX_HEALTH, POOP_CONFIG, SLEEP_CONFIG } from '../constants';
 import { GAME_ACTIONS } from '../constants/gameActions';
 import { useBounceAnimation } from './useBounceAnimation';
+import { SleepQuality } from './useSleepSchedule';
 
 export interface UseGameActionsReturn {
   bounceAnim: Animated.Value;
   handleEat: () => void;
   handlePlay: () => void;
-  handleSleep: () => void;
+  handleSleep: (sleepQuality?: SleepQuality) => void;
   handleExercise: () => void;
   handlePet: () => void;
   handleMedicine: () => void;
+  handleClean: () => void;
 }
 
 /**
@@ -48,11 +50,15 @@ export function useGameActions(
     }));
   }, [playBounceAnimation, setGameState]);
 
-  const handleSleep = useCallback((): void => {
+  const handleSleep = useCallback((sleepQuality: SleepQuality = 'good'): void => {
     playBounceAnimation();
+    const energyMultiplier = sleepQuality === 'good'
+      ? SLEEP_CONFIG.properSleepEnergyBonus
+      : SLEEP_CONFIG.improperSleepEnergyPenalty;
+
     setGameState((prev) => ({
       ...prev,
-      energy: Math.min(MAX_ENERGY, prev.energy + GAME_ACTIONS.sleep.energyIncrease),
+      energy: Math.min(MAX_ENERGY, prev.energy + Math.floor(GAME_ACTIONS.sleep.energyIncrease * energyMultiplier)),
       hunger: Math.max(0, prev.hunger - GAME_ACTIONS.sleep.hungerDecrease),
       experience: prev.experience + GAME_ACTIONS.sleep.experienceGain,
       lastInteraction: Date.now(),
@@ -94,6 +100,16 @@ export function useGameActions(
     }));
   }, [playBounceAnimation, setGameState]);
 
+  const handleClean = useCallback((): void => {
+    playBounceAnimation();
+    setGameState((prev) => ({
+      ...prev,
+      poopCount: 0,
+      experience: prev.experience + POOP_CONFIG.cleanXpGain,
+      lastInteraction: Date.now(),
+    }));
+  }, [playBounceAnimation, setGameState]);
+
   return {
     bounceAnim,
     handleEat,
@@ -102,5 +118,6 @@ export function useGameActions(
     handleExercise,
     handlePet,
     handleMedicine,
+    handleClean,
   };
 }

@@ -10,11 +10,13 @@ export interface UseStatDecayReturn {
  * Custom hook for applying stat decay over time
  * @param gameState - Current game state
  * @param setGameState - State setter function
+ * @param decayMultiplier - Optional multiplier for decay rates (from life stage/sickness)
  * @returns Functions to manage stat decay
  */
 export function useStatDecay(
   gameState: GameState,
-  setGameState: React.Dispatch<React.SetStateAction<GameState>>
+  setGameState: React.Dispatch<React.SetStateAction<GameState>>,
+  decayMultiplier: number = 1.0
 ): UseStatDecayReturn {
   // Store character type to detect character changes
   const characterRef = useRef(gameState.character);
@@ -22,7 +24,7 @@ export function useStatDecay(
   // Memoize applyDecay to prevent recreating on every render
   const applyDecay = useCallback((): void => {
     setGameState((prev) => {
-      if (!prev.character) return prev;
+      if (!prev.character || prev.isDead) return prev;
 
       const now = Date.now();
       const timeSinceLastInteraction = now - prev.lastInteraction;
@@ -30,15 +32,20 @@ export function useStatDecay(
 
       if (hoursPassed < 0.1) return prev; // Only decay if at least 6 minutes passed
 
+      // Apply decay multiplier to all rates
+      const effectiveHungerDecay = DECAY_RATES.hunger * decayMultiplier;
+      const effectiveHappinessDecay = DECAY_RATES.happiness * decayMultiplier;
+      const effectiveEnergyDecay = DECAY_RATES.energy * decayMultiplier;
+
       return {
         ...prev,
-        hunger: Math.max(0, prev.hunger - DECAY_RATES.hunger * hoursPassed),
-        happiness: Math.max(0, prev.happiness - DECAY_RATES.happiness * hoursPassed),
-        energy: Math.max(0, prev.energy - DECAY_RATES.energy * hoursPassed),
+        hunger: Math.max(0, prev.hunger - effectiveHungerDecay * hoursPassed),
+        happiness: Math.max(0, prev.happiness - effectiveHappinessDecay * hoursPassed),
+        energy: Math.max(0, prev.energy - effectiveEnergyDecay * hoursPassed),
         lastInteraction: now,
       };
     });
-  }, [setGameState]);
+  }, [setGameState, decayMultiplier]);
 
   useEffect(() => {
     if (!gameState.character) return;

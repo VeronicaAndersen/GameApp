@@ -118,6 +118,12 @@ export function usePersistentGameState(): UsePersistentGameStateReturn {
     gameState.health,
     gameState.customName,
     gameState.character,
+    // Tamagotchi fields
+    gameState.lifeStage,
+    gameState.poopCount,
+    gameState.isSick,
+    gameState.isDead,
+    gameState.lightsOn,
     isLoading,
     saveCurrentProgress,
   ]);

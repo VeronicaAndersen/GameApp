@@ -12,9 +12,15 @@ import { useLevelUp } from '../hooks/useLevelUp';
 import { useStatDecay } from '../hooks/useStatDecay';
 import { useRandomEvents } from '../hooks/useRandomEvents';
 import { useCharacterAnimation } from '../hooks/useCharacterAnimation';
+import { useTamagotchiFeatures } from '../hooks/useTamagotchiFeatures';
 import { EventNotification } from '../components/EventNotification';
 import { SnoringAnimation } from '../components/SnoringAnimation';
 import { ActionEmojis, ActionType } from '../components/ActionEmojis';
+import { PoopDisplay } from '../components/PoopDisplay';
+import { SickIndicator } from '../components/SickIndicator';
+import { DeathScreen } from '../components/DeathScreen';
+import { LightsToggle } from '../components/LightsToggle';
+import { LifeStageIndicator } from '../components/LifeStageIndicator';
 import { useTimeoutManager } from '../utils/timeoutManager';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
@@ -50,9 +56,15 @@ export function GameScreen({
   // Use timeout manager for automatic cleanup
   const timeoutManager = useTimeoutManager();
 
-  const { bounceAnim, handleEat, handlePlay, handleSleep, handleExercise, handlePet, handleMedicine } = useGameActions(setGameState);
+  const { bounceAnim, handleEat, handlePlay, handleSleep, handleExercise, handlePet, handleMedicine, handleClean } = useGameActions(setGameState);
   const { levelUpAnim, xpProgress } = useLevelUp(gameState, setGameState);
-  useStatDecay(gameState, setGameState);
+
+  // Tamagotchi features
+  const tamagotchi = useTamagotchiFeatures(gameState, setGameState);
+
+  // Use decay multiplier from Tamagotchi features
+  useStatDecay(gameState, setGameState, tamagotchi.totalDecayMultiplier);
+
   const { currentEvent, dismissEvent } = useRandomEvents(gameState, setGameState);
   const { characterScale, characterRotate, playJumpAnimation, playShakeAnimation, playSpinAnimation, playHappyAnimation } = useCharacterAnimation();
 
@@ -91,14 +103,14 @@ export function GameScreen({
   }, [handlePlay, playHappyAnimation, timeoutManager]);
 
   const handleSleepWithAnimation = useCallback(() => {
-    handleSleep();
+    handleSleep(tamagotchi.sleep.sleepQuality);
     playShakeAnimation();
     setIsSnoring(true);
     timeoutManager.setTimeout(
       () => setIsSnoring(false),
       ANIMATION_CONFIG.timeouts.snoringDisplay
     );
-  }, [handleSleep, playShakeAnimation, timeoutManager]);
+  }, [handleSleep, playShakeAnimation, timeoutManager, tamagotchi.sleep.sleepQuality]);
 
   const handleExerciseWithAnimation = useCallback(() => {
     handleExercise();
@@ -121,6 +133,11 @@ export function GameScreen({
     );
   }, [handleMedicine, playShakeAnimation, timeoutManager]);
 
+  const handleCleanWithAnimation = useCallback(() => {
+    handleClean();
+    playHappyAnimation();
+  }, [handleClean, playHappyAnimation]);
+
   const handleOpenRenameModal = useCallback(() => {
     setShowRenameModal(true);
   }, []);
@@ -134,6 +151,7 @@ export function GameScreen({
     onPet: handlePetWithAnimation,
     onMedicine: handleMedicineWithAnimation,
     onRename: handleOpenRenameModal,
+    onClean: handleCleanWithAnimation,
   });
 
   return (
@@ -151,43 +169,57 @@ export function GameScreen({
         <View style={styles.gameContent}>
           {/* Header */}
           <View style={styles.gameHeader}>
-            <TouchableOpacity
-              onPress={() => setShowRenameModal(true)}
-              activeOpacity={0.7}
-              accessibilityRole="button"
-              accessibilityLabel="Rename character"
-              accessibilityHint="Tap to give your character a custom name"
-            >
-              <Text
-                style={[
-                  styles.gameTitle,
-                  isDarkMode && styles.darkTitle,
-                  isTablet && styles.tabletTitle,
-                ]}
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: scale(12) }}>
+              <TouchableOpacity
+                onPress={() => setShowRenameModal(true)}
+                activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel="Rename character"
+                accessibilityHint="Tap to give your character a custom name"
               >
-                {displayName} ✏️
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.backButton,
-                isDarkMode && styles.darkBackButton,
-                isTablet && styles.tabletBackButton,
-              ]}
-              onPress={() => setGameState(INITIAL_STATE)}
-              activeOpacity={0.7}
-              accessibilityRole="button"
-              accessibilityLabel="Change character"
-              accessibilityHint="Return to character selection screen to choose a different character"
-            >
-              <Text style={[
-                styles.backButtonText,
-                isDarkMode && styles.darkSubtitle,
-                isTablet && styles.tabletBackButtonText,
-              ]}>
-                Byt karaktär
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.gameTitle,
+                    isDarkMode && styles.darkTitle,
+                    isTablet && styles.tabletTitle,
+                  ]}
+                >
+                  {displayName} ✏️
+                </Text>
+              </TouchableOpacity>
+              <LifeStageIndicator
+                stage={tamagotchi.lifeStage.currentStage}
+                stageConfig={tamagotchi.lifeStage.stageConfig}
+                ageDisplay={tamagotchi.lifeStage.ageDisplay}
+              />
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: scale(12) }}>
+              <LightsToggle
+                lightsOn={tamagotchi.sleep.lightsOn}
+                isNightTime={tamagotchi.sleep.isNightTime}
+                onToggle={tamagotchi.sleep.toggleLights}
+              />
+              <TouchableOpacity
+                style={[
+                  styles.backButton,
+                  isDarkMode && styles.darkBackButton,
+                  isTablet && styles.tabletBackButton,
+                ]}
+                onPress={() => setGameState(INITIAL_STATE)}
+                activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel="Change character"
+                accessibilityHint="Return to character selection screen to choose a different character"
+              >
+                <Text style={[
+                  styles.backButtonText,
+                  isDarkMode && styles.darkSubtitle,
+                  isTablet && styles.tabletBackButtonText,
+                ]}>
+                  Byt karaktär
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Character Display */}
@@ -197,7 +229,10 @@ export function GameScreen({
                 styles.characterDisplayContainer,
                 {
                   transform: [
-                    { scale: Animated.multiply(bounceAnim, characterScale) },
+                    { scale: Animated.multiply(bounceAnim, characterScale).interpolate({
+                      inputRange: [0, 10],
+                      outputRange: [0, 10 * tamagotchi.lifeStage.stageConfig.scale],
+                    }) },
                     {
                       rotate: characterRotate.interpolate({
                         inputRange: [-360, 360],
@@ -214,6 +249,7 @@ export function GameScreen({
                   { backgroundColor: character.color + '20' },
                   isTablet && styles.tabletCharacterDisplayEmoji,
                   (character.type === 'lizard' || character.type === 'cat') && styles.lizardDisplayContainer,
+                  !tamagotchi.sleep.lightsOn && { backgroundColor: character.color + '10' },
                 ]}
               >
                 <CharacterIcon
@@ -221,12 +257,23 @@ export function GameScreen({
                   size={moderateScale(60)}
                   isTablet={isTablet}
                   containerSize={isTablet ? scale(200) : scale(120)}
+                  lifeStage={tamagotchi.lifeStage.currentStage}
+                  isSick={tamagotchi.health.isSick}
+                  isDead={tamagotchi.health.isDead}
+                  isSleeping={!tamagotchi.sleep.lightsOn}
                 />
                 {/* Snoring Animation */}
                 <SnoringAnimation visible={isSnoring} />
                 {/* Action Emojis */}
                 <ActionEmojis visible={showActionEmojis} actionType={currentActionType} />
+                {/* Sick Indicator */}
+                <SickIndicator
+                  isSick={tamagotchi.health.isSick}
+                  sickReason={tamagotchi.health.sickReason}
+                />
               </View>
+              {/* Poop Display */}
+              <PoopDisplay poopCount={tamagotchi.poop.poopCount} isTablet={isTablet} />
               <Animated.View
                 style={[
                   styles.levelUpBadge,
@@ -594,6 +641,35 @@ export function GameScreen({
                 </Text>
               </TouchableOpacity>
             </View>
+
+            {/* Third row - Clean button */}
+            <View style={{ flexDirection: 'row', gap: scale(12), justifyContent: 'center' }}>
+              <TouchableOpacity
+                style={[
+                  styles.actionButton,
+                  { backgroundColor: '#8B4513' },
+                  isTablet && styles.tabletActionButton,
+                  gameState.poopCount === 0 && styles.disabledActionButton,
+                ]}
+                onPress={handleCleanWithAnimation}
+                activeOpacity={0.8}
+                disabled={gameState.poopCount === 0}
+                accessibilityRole="button"
+                accessibilityLabel={`Clean up after ${displayName}`}
+                accessibilityHint={`Remove all poop and gain 5 experience`}
+                accessibilityState={{ disabled: gameState.poopCount === 0 }}
+              >
+                <Text style={styles.actionEmoji}>🧹</Text>
+                <Text
+                  style={[
+                    styles.actionButtonText,
+                    isTablet && styles.tabletActionButtonText,
+                  ]}
+                >
+                  Städa {gameState.poopCount > 0 ? `(${gameState.poopCount})` : ''}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -604,6 +680,16 @@ export function GameScreen({
         onDismiss={dismissEvent}
         isDarkMode={isDarkMode}
         isTablet={isTablet}
+      />
+
+      {/* Death Screen */}
+      <DeathScreen
+        visible={tamagotchi.health.isDead}
+        characterName={displayName}
+        characterType={gameState.character}
+        canRevive={tamagotchi.health.canRevive}
+        onRevive={tamagotchi.health.handleRevive}
+        onNewPet={() => setGameState(INITIAL_STATE)}
       />
 
       {/* Rename Modal */}

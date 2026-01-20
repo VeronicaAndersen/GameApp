@@ -1,5 +1,16 @@
 export type CharacterType = 'lizard' | 'cat' | 'unicorn';
 
+// Life stage types
+export type LifeStage = 'baby' | 'child' | 'teen' | 'adult' | 'senior';
+
+export interface LifeStageConfig {
+  name: string;
+  minAgeHours: number;
+  maxAgeHours: number;
+  scale: number;
+  decayMultiplier: number;
+}
+
 export interface Character {
   type: CharacterType;
   name: string;
@@ -16,6 +27,20 @@ export interface CharacterProgress {
   health: number;
   lastInteraction: number;
   customName?: string;
+  // Life stages
+  createdAt: number;
+  lifeStage: LifeStage;
+  // Poop mechanics
+  poopCount: number;
+  lastPoopTime: number;
+  // Sickness & death
+  isSick: boolean;
+  sickSince?: number;
+  isDead: boolean;
+  deathTime?: number;
+  // Sleep schedule
+  lightsOn: boolean;
+  lastSleepQualityCheck: number;
 }
 
 export interface GameState {
@@ -28,6 +53,20 @@ export interface GameState {
   health: number;
   lastInteraction: number;
   customName?: string;
+  // Life stages
+  createdAt: number;
+  lifeStage: LifeStage;
+  // Poop mechanics
+  poopCount: number;
+  lastPoopTime: number;
+  // Sickness & death
+  isSick: boolean;
+  sickSince?: number;
+  isDead: boolean;
+  deathTime?: number;
+  // Sleep schedule
+  lightsOn: boolean;
+  lastSleepQualityCheck: number;
 }
 
 export type CharacterProgressMap = {

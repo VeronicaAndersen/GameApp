@@ -9,6 +9,7 @@ export interface KeyboardShortcutHandlers {
   onPet?: () => void;
   onMedicine?: () => void;
   onRename?: () => void;
+  onClean?: () => void;
 }
 
 /**
@@ -67,6 +68,11 @@ export function useKeyboardShortcuts(handlers: KeyboardShortcutHandlers): void {
             handlers.onRename?.();
           }
           break;
+        case 'c':
+        case '7':
+          event.preventDefault();
+          handlers.onClean?.();
+          break;
         case '?':
           // Show keyboard shortcuts help (future enhancement)
           event.preventDefault();
@@ -78,6 +84,7 @@ Keyboard Shortcuts:
   E or 4 - Exercise
   T or 5 - Pet
   M or 6 - Medicine
+  C or 7 - Clean
   R - Rename
           `);
           break;
