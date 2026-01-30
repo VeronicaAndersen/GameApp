@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { LizardSvg } from './LizardSvg';
-import { CatSvg } from './CatSvg';
-import { UnicornSvg } from './UnicornSvg';
+import { CharacterPng } from './CharacterPng';
 import { AnimatedCharacter } from './AnimatedCharacter';
 import { LifeStageOverlay } from './LifeStageOverlay';
 import { CharacterType, LifeStage } from '../types';
 import { CHARACTERS } from '../constants';
-import { SVG_ASPECT_RATIOS, SVG_SIZE_MULTIPLIERS } from '../constants/svgAspectRatios';
+import { SVG_SIZE_MULTIPLIERS } from '../constants/svgAspectRatios';
+
+const PNG_ASPECT_RATIO = 624 / 416; // Height/Width ratio of cropped PNGs
 
 interface CharacterIconProps {
   characterType: CharacterType;
@@ -44,13 +44,10 @@ export const CharacterIcon = React.memo<CharacterIconProps>(({
   const renderCharacter = () => {
     switch (characterType) {
       case 'lizard':
-        return <LizardSvg width={svgSize} height={svgSize * SVG_ASPECT_RATIOS.lizard} />;
+        return <CharacterPng characterType="lizard" lifeStage={lifeStage} width={svgSize} height={svgSize * PNG_ASPECT_RATIO} />;
 
       case 'cat':
-        return <CatSvg width={svgSize} height={svgSize * SVG_ASPECT_RATIOS.cat} />;
-
-      case 'unicorn':
-        return <UnicornSvg width={svgSize} height={svgSize * SVG_ASPECT_RATIOS.unicorn} />;
+        return <CharacterPng characterType="cat" lifeStage={lifeStage} width={svgSize} height={svgSize * PNG_ASPECT_RATIO} />;
 
       default: {
         const character = CHARACTERS.find((c) => c.type === characterType);

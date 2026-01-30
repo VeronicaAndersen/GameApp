@@ -5,7 +5,6 @@
 export const SVG_ASPECT_RATIOS = {
   lizard: 0.735, // 339/461
   cat: 294.0701 / 246.54726,
-  unicorn: 172 / 211,
 } as const;
 
 /**

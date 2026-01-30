@@ -74,7 +74,6 @@ export function CharacterSelectionScreen({
                     isTablet && styles.tabletCharacterEmojiContainer,
                     character.type === 'lizard' && styles.lizardEmojiContainer,
                     character.type === 'cat' && styles.catEmojiContainer,
-                    character.type === 'unicorn' && styles.unicornEmojiContainer,
                   ]}
                 >
                   <CharacterIcon

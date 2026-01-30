@@ -1,4 +1,4 @@
-export type CharacterType = 'lizard' | 'cat' | 'unicorn';
+export type CharacterType = 'lizard' | 'cat';
 
 // Life stage types
 export type LifeStage = 'baby' | 'child' | 'teen' | 'adult' | 'senior';
@@ -85,5 +85,5 @@ export interface Dimensions {
  * Type guard to check if a value is a valid CharacterType
  */
 export function isCharacterType(value: unknown): value is CharacterType {
-  return typeof value === 'string' && ['lizard', 'cat', 'unicorn'].includes(value);
+  return typeof value === 'string' && ['lizard', 'cat'].includes(value);
 }

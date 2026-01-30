@@ -16,12 +16,6 @@ export const CHARACTERS: Character[] = [
     emoji: '',
     color: '#FF69B4',
   },
-  {
-    type: 'unicorn',
-    name: 'Enhörning',
-    emoji: '🦄',
-    color: '#9370DB',
-  },
 ];
 
 export const INITIAL_STATE: GameState = {

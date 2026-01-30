@@ -87,11 +87,6 @@ export const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     overflow: 'visible',
   },
-  unicornEmojiContainer: {
-    borderRadius: 0,
-    backgroundColor: 'transparent',
-    overflow: 'visible',
-  },
   characterName: {
     fontSize: moderateScale(20),
     fontWeight: '600',
