@@ -306,7 +306,7 @@ export function GameScreen({
           <View
             style={styles.statsContainer}
             accessibilityRole="summary"
-            accessibilityLabel={`Character stats: Level ${gameState.level}, ${gameState.experience % XP_PER_LEVEL} of ${XP_PER_LEVEL} experience points, ${gameState.hunger}% hunger, ${gameState.happiness}% happiness, ${gameState.energy}% energy, ${gameState.health}% health`}
+            accessibilityLabel={`Character stats: Level ${gameState.level}, ${gameState.experience % XP_PER_LEVEL} of ${XP_PER_LEVEL} experience points, ${Math.round(gameState.hunger)}% hunger, ${Math.round(gameState.happiness)}% happiness, ${Math.round(gameState.energy)}% energy, ${Math.round(gameState.health)}% health`}
           >
             <View style={styles.levelContainer}>
               <Text
@@ -372,7 +372,7 @@ export function GameScreen({
                     isDarkMode && styles.darkSubtitle,
                   ]}
                 >
-                  {gameState.hunger}%
+                  {Math.round(gameState.hunger)}%
                 </Text>
               </View>
 
@@ -405,7 +405,7 @@ export function GameScreen({
                     isDarkMode && styles.darkSubtitle,
                   ]}
                 >
-                  {gameState.happiness}%
+                  {Math.round(gameState.happiness)}%
                 </Text>
               </View>
             </View>
@@ -440,7 +440,7 @@ export function GameScreen({
                     isDarkMode && styles.darkSubtitle,
                   ]}
                 >
-                  {gameState.energy}%
+                  {Math.round(gameState.energy)}%
                 </Text>
               </View>
 
@@ -473,7 +473,7 @@ export function GameScreen({
                     isDarkMode && styles.darkSubtitle,
                   ]}
                 >
-                  {gameState.health}%
+                  {Math.round(gameState.health)}%
                 </Text>
               </View>
             </View>
