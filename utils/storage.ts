@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { CharacterType, CharacterProgress, CharacterProgressMap, isCharacterType, LifeStage } from '../types';
 import { INITIAL_STATE } from '../constants';
 import { validateCharacterProgress, sanitizeCharacterProgress } from './validation';

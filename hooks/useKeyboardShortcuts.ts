@@ -76,6 +76,7 @@ export function useKeyboardShortcuts(handlers: KeyboardShortcutHandlers): void {
         case '?':
           // Show keyboard shortcuts help (future enhancement)
           event.preventDefault();
+          // eslint-disable-next-line no-console
           console.log(`
 Keyboard Shortcuts:
   F or 1 - Feed

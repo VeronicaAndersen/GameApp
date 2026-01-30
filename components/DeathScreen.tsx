@@ -18,7 +18,7 @@ interface DeathScreenProps {
 export const DeathScreen: React.FC<DeathScreenProps> = ({
   visible,
   characterName,
-  characterType,
+  characterType: _characterType,
   canRevive,
   onRevive,
   onNewPet,

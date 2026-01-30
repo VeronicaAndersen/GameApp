@@ -115,6 +115,7 @@ export const AnimatedCharacter: React.FC<AnimatedCharacterProps> = ({
 
     bounce.start();
     return () => bounce.stop();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lifeStage, isDead, isSleeping, config.bounceDuration, config.bounceHeight]);
 
   // Breathing animation (subtle scale pulse)
@@ -138,6 +139,7 @@ export const AnimatedCharacter: React.FC<AnimatedCharacterProps> = ({
 
     breathe.start();
     return () => breathe.stop();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lifeStage, isSleeping, config.breatheScale, config.breatheDuration]);
 
   // Wobble animation for babies and children
@@ -172,6 +174,7 @@ export const AnimatedCharacter: React.FC<AnimatedCharacterProps> = ({
 
     wobble.start();
     return () => wobble.stop();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lifeStage, isDead, isSleeping, config.wobbleAngle, config.wobbleDuration]);
 
   // Sick sway animation (woozy movement)
@@ -206,6 +209,7 @@ export const AnimatedCharacter: React.FC<AnimatedCharacterProps> = ({
 
     sway.start();
     return () => sway.stop();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSick, isDead]);
 
   // Combine rotation from wobble and sick sway
@@ -220,6 +224,7 @@ export const AnimatedCharacter: React.FC<AnimatedCharacterProps> = ({
     <Animated.View
       style={[
         styles.container,
+        // eslint-disable-next-line react-native/no-inline-styles
         {
           transform: [
             { translateY: bounceAnim },
@@ -280,6 +285,7 @@ const SleepingIndicator: React.FC = () => {
       anim2.stop();
       anim3.stop();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderZ = (anim: Animated.Value, size: number, offsetX: number, offsetY: number) => {

@@ -5,9 +5,10 @@
 
 import { Platform } from 'react-native';
 
-// Dynamic import for AsyncStorage (only on native platforms)
-let AsyncStorage: any;
+ 
+let AsyncStorage: { getItem: (key: string) => Promise<string | null>; setItem: (key: string, value: string) => Promise<void>; removeItem: (key: string) => Promise<void>; clear: () => Promise<void> };
 if (Platform.OS !== 'web') {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   AsyncStorage = require('@react-native-async-storage/async-storage').default;
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { GameState, CharacterType } from '../types';
 import { INITIAL_STATE } from '../constants';

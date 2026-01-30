@@ -318,4 +318,53 @@ export const styles = StyleSheet.create({
   tabletActionButtonText: {
     fontSize: moderateScale(22),
   },
+  headerRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+  },
+  actionRowContainer: {
+    gap: scale(12),
+  },
+  actionRow: {
+    flexDirection: 'row' as const,
+    gap: scale(12),
+  },
+  actionRowCenter: {
+    flexDirection: 'row' as const,
+    gap: scale(12),
+    justifyContent: 'center' as const,
+  },
+  statBarHunger: {
+    backgroundColor: '#FF6B6B',
+  },
+  statBarHappiness: {
+    backgroundColor: '#4ECDC4',
+  },
+  statBarEnergy: {
+    backgroundColor: '#FFD93D',
+  },
+  statBarHealth: {
+    backgroundColor: '#6BCF7F',
+  },
+  actionButtonEat: {
+    backgroundColor: '#FF6B6B',
+  },
+  actionButtonPlay: {
+    backgroundColor: '#4ECDC4',
+  },
+  actionButtonSleep: {
+    backgroundColor: '#9370DB',
+  },
+  actionButtonExercise: {
+    backgroundColor: '#FF8C42',
+  },
+  actionButtonPet: {
+    backgroundColor: '#FF69B4',
+  },
+  actionButtonMedicine: {
+    backgroundColor: '#87CEEB',
+  },
+  actionButtonClean: {
+    backgroundColor: '#8B4513',
+  },
 });

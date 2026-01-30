@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Web polyfills for React Native components
 if (typeof window !== 'undefined') {
   // Ensure smooth animations

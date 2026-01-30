@@ -40,13 +40,6 @@ export function GameScreen({
   const isTablet = dimensions.width >= 768;
   const character = CHARACTERS.find((c) => c.type === gameState.character);
 
-  // Validate character exists - prevent runtime errors
-  if (!character) {
-    console.error('Character not found:', gameState.character);
-    setGameState(INITIAL_STATE);
-    return <></>;
-  }
-
   const [showRenameModal, setShowRenameModal] = useState(false);
   const [newName, setNewName] = useState('');
   const [isSnoring, setIsSnoring] = useState(false);
@@ -69,15 +62,15 @@ export function GameScreen({
   const { characterScale, characterRotate, playJumpAnimation, playShakeAnimation, playSpinAnimation, playHappyAnimation } = useCharacterAnimation();
 
   const handleRename = useCallback(() => {
-    if (newName.trim()) {
+    if (newName.trim() && character) {
       setGameState(prev => ({ ...prev, customName: newName.trim() }));
       setShowRenameModal(false);
       setNewName('');
       playHappyAnimation();
     }
-  }, [newName, setGameState, playHappyAnimation]);
+  }, [newName, character, setGameState, playHappyAnimation]);
 
-  const displayName = gameState.customName || character.name;
+  const displayName = gameState.customName || (character?.name ?? '');
 
   // Wrap action handlers with animations and managed timeouts
   const handleEatWithAnimation = useCallback(() => {
@@ -154,6 +147,12 @@ export function GameScreen({
     onClean: handleCleanWithAnimation,
   });
 
+  // Validate character exists - prevent runtime errors
+  if (!character) {
+    setGameState(INITIAL_STATE);
+    return <></>;
+  }
+
   return (
     <SafeAreaView
       style={[styles.container, isDarkMode && styles.darkContainer]}
@@ -169,7 +168,7 @@ export function GameScreen({
         <View style={styles.gameContent}>
           {/* Header */}
           <View style={styles.gameHeader}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: scale(12) }}>
+            <View style={[styles.headerRow, { gap: scale(12) }]}>
               <TouchableOpacity
                 onPress={() => setShowRenameModal(true)}
                 activeOpacity={0.7}
@@ -193,7 +192,7 @@ export function GameScreen({
                 ageDisplay={tamagotchi.lifeStage.ageDisplay}
               />
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: scale(12) }}>
+            <View style={[styles.headerRow, { gap: scale(12) }]}>
               <LightsToggle
                 lightsOn={tamagotchi.sleep.lightsOn}
                 isNightTime={tamagotchi.sleep.isNightTime}
@@ -354,10 +353,8 @@ export function GameScreen({
                   <View
                     style={[
                       styles.statBar,
-                      {
-                        width: `${(gameState.hunger / MAX_HUNGER) * 100}%`,
-                        backgroundColor: '#FF6B6B',
-                      },
+                      styles.statBarHunger,
+                      { width: `${(gameState.hunger / MAX_HUNGER) * 100}%` },
                     ]}
                   />
                 </View>
@@ -389,10 +386,8 @@ export function GameScreen({
                   <View
                     style={[
                       styles.statBar,
-                      {
-                        width: `${(gameState.happiness / MAX_HAPPINESS) * 100}%`,
-                        backgroundColor: '#4ECDC4',
-                      },
+                      styles.statBarHappiness,
+                      { width: `${(gameState.happiness / MAX_HAPPINESS) * 100}%` },
                     ]}
                   />
                 </View>
@@ -426,10 +421,8 @@ export function GameScreen({
                   <View
                     style={[
                       styles.statBar,
-                      {
-                        width: `${(gameState.energy / MAX_ENERGY) * 100}%`,
-                        backgroundColor: '#FFD93D',
-                      },
+                      styles.statBarEnergy,
+                      { width: `${(gameState.energy / MAX_ENERGY) * 100}%` },
                     ]}
                   />
                 </View>
@@ -461,10 +454,8 @@ export function GameScreen({
                   <View
                     style={[
                       styles.statBar,
-                      {
-                        width: `${(gameState.health / MAX_HEALTH) * 100}%`,
-                        backgroundColor: '#6BCF7F',
-                      },
+                      styles.statBarHealth,
+                      { width: `${(gameState.health / MAX_HEALTH) * 100}%` },
                     ]}
                   />
                 </View>
@@ -481,12 +472,12 @@ export function GameScreen({
           </View>
 
           {/* Actions */}
-          <View style={{ gap: scale(12) }}>
-            <View style={{ flexDirection: 'row', gap: scale(12) }}>
+          <View style={styles.actionRowContainer}>
+            <View style={styles.actionRow}>
               <TouchableOpacity
                 style={[
                   styles.actionButton,
-                  { backgroundColor: '#FF6B6B' },
+                  styles.actionButtonEat,
                   isTablet && styles.tabletActionButton,
                   gameState.hunger >= MAX_HUNGER && styles.disabledActionButton,
                 ]}
@@ -512,7 +503,7 @@ export function GameScreen({
               <TouchableOpacity
                 style={[
                   styles.actionButton,
-                  { backgroundColor: '#4ECDC4' },
+                  styles.actionButtonPlay,
                   isTablet && styles.tabletActionButton,
                   gameState.happiness >= MAX_HAPPINESS && styles.disabledActionButton,
                 ]}
@@ -538,7 +529,7 @@ export function GameScreen({
               <TouchableOpacity
                 style={[
                   styles.actionButton,
-                  { backgroundColor: '#9370DB' },
+                  styles.actionButtonSleep,
                   isTablet && styles.tabletActionButton,
                   gameState.energy >= MAX_ENERGY && styles.disabledActionButton,
                 ]}
@@ -562,11 +553,11 @@ export function GameScreen({
               </TouchableOpacity>
             </View>
 
-            <View style={{ flexDirection: 'row', gap: scale(12) }}>
+            <View style={styles.actionRow}>
               <TouchableOpacity
                 style={[
                   styles.actionButton,
-                  { backgroundColor: '#FF8C42' },
+                  styles.actionButtonExercise,
                   isTablet && styles.tabletActionButton,
                   gameState.energy < 20 && styles.disabledActionButton,
                 ]}
@@ -592,7 +583,7 @@ export function GameScreen({
               <TouchableOpacity
                 style={[
                   styles.actionButton,
-                  { backgroundColor: '#FF69B4' },
+                  styles.actionButtonPet,
                   isTablet && styles.tabletActionButton,
                   gameState.happiness >= MAX_HAPPINESS && styles.disabledActionButton,
                 ]}
@@ -618,7 +609,7 @@ export function GameScreen({
               <TouchableOpacity
                 style={[
                   styles.actionButton,
-                  { backgroundColor: '#87CEEB' },
+                  styles.actionButtonMedicine,
                   isTablet && styles.tabletActionButton,
                   gameState.health >= MAX_HEALTH && styles.disabledActionButton,
                 ]}
@@ -643,11 +634,11 @@ export function GameScreen({
             </View>
 
             {/* Third row - Clean button */}
-            <View style={{ flexDirection: 'row', gap: scale(12), justifyContent: 'center' }}>
+            <View style={styles.actionRowCenter}>
               <TouchableOpacity
                 style={[
                   styles.actionButton,
-                  { backgroundColor: '#8B4513' },
+                  styles.actionButtonClean,
                   isTablet && styles.tabletActionButton,
                   gameState.poopCount === 0 && styles.disabledActionButton,
                 ]}

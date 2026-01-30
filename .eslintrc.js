@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  ignorePatterns: ['dist/', 'node_modules/', '*.bundle.js'],
   extends: [
     '@react-native',
     'plugin:@typescript-eslint/recommended',

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { moderateScale, scale, verticalScale } from '../utils/responsive';
+import { moderateScale, verticalScale } from '../utils/responsive';
 
 interface PoopDisplayProps {
   poopCount: number;
@@ -38,11 +38,8 @@ export const PoopDisplay: React.FC<PoopDisplayProps> = ({ poopCount, isTablet })
           style={[
             styles.poop,
             isTablet && styles.poopTablet,
-            {
-              left: '50%',
-              marginLeft: pos.left,
-              bottom: pos.bottom,
-            },
+            // eslint-disable-next-line react-native/no-inline-styles
+            { left: '50%', marginLeft: pos.left, bottom: pos.bottom },
           ]}
         >
           💩

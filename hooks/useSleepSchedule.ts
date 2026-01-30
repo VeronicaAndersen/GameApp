@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { GameState } from '../types';
-import { SLEEP_CONFIG, MAX_HAPPINESS } from '../constants';
+import { SLEEP_CONFIG } from '../constants';
 
 export type SleepQuality = 'good' | 'poor';
 

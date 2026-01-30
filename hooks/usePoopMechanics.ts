@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { GameState } from '../types';
-import { POOP_CONFIG, MAX_HEALTH } from '../constants';
+import { POOP_CONFIG } from '../constants';
 
 export interface UsePoopMechanicsReturn {
   poopCount: number;
@@ -64,16 +64,6 @@ export function usePoopMechanics(
   // Apply health penalty for excessive poop
   useEffect(() => {
     if (gameState.isDead || !isPoopCritical) return;
-
-    const applyHealthPenalty = () => {
-      const excessPoop = gameState.poopCount - POOP_CONFIG.healthyPoopThreshold;
-      const healthDecrease = excessPoop * POOP_CONFIG.healthDecreasePerPoop;
-
-      setGameState((prev) => ({
-        ...prev,
-        health: Math.max(0, prev.health - healthDecrease),
-      }));
-    };
 
     // Apply penalty every hour (check every minute, apply proportionally)
     const interval = setInterval(() => {
