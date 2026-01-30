@@ -21,6 +21,7 @@ import { SickIndicator } from '../components/SickIndicator';
 import { DeathScreen } from '../components/DeathScreen';
 import { LightsToggle } from '../components/LightsToggle';
 import { LifeStageIndicator } from '../components/LifeStageIndicator';
+import { NightOverlay } from '../components/NightOverlay';
 import { useTimeoutManager } from '../utils/timeoutManager';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
@@ -71,6 +72,7 @@ export function GameScreen({
   }, [newName, character, setGameState, playHappyAnimation]);
 
   const displayName = gameState.customName || (character?.name ?? '');
+  const lightsOff = !tamagotchi.sleep.lightsOn;
 
   // Wrap action handlers with animations and managed timeouts
   const handleEatWithAnimation = useCallback(() => {
@@ -155,7 +157,12 @@ export function GameScreen({
 
   return (
     <SafeAreaView
-      style={[styles.container, isDarkMode && styles.darkContainer]}
+      style={[
+        styles.container,
+        isDarkMode && styles.darkContainer,
+        !isDarkMode && lightsOff && styles.lightsOffContainer,
+        !isDarkMode && !lightsOff && styles.lightsOnContainer,
+      ]}
       edges={['top', 'bottom', 'left', 'right']}
     >
       <ScrollView
@@ -248,7 +255,7 @@ export function GameScreen({
                   { backgroundColor: character.color + '20' },
                   isTablet && styles.tabletCharacterDisplayEmoji,
                   (character.type === 'lizard' || character.type === 'cat') && styles.lizardDisplayContainer,
-                  !tamagotchi.sleep.lightsOn && { backgroundColor: character.color + '10' },
+                  lightsOff && { backgroundColor: character.color + '10' },
                 ]}
               >
                 <CharacterIcon
@@ -259,7 +266,7 @@ export function GameScreen({
                   lifeStage={tamagotchi.lifeStage.currentStage}
                   isSick={tamagotchi.health.isSick}
                   isDead={tamagotchi.health.isDead}
-                  isSleeping={!tamagotchi.sleep.lightsOn}
+                  isSleeping={lightsOff}
                 />
                 {/* Snoring Animation */}
                 <SnoringAnimation visible={isSnoring} />
@@ -270,6 +277,7 @@ export function GameScreen({
                   isSick={tamagotchi.health.isSick}
                   sickReason={tamagotchi.health.sickReason}
                 />
+                <NightOverlay visible={lightsOff} />
               </View>
               {/* Poop Display */}
               <PoopDisplay poopCount={tamagotchi.poop.poopCount} isTablet={isTablet} />

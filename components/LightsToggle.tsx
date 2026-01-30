@@ -19,8 +19,10 @@ export const LightsToggle: React.FC<LightsToggleProps> = ({
   return (
     <View style={styles.container}>
       {isNightTime && (
-        <View style={styles.nightIndicator}>
-          <Text style={styles.nightText}>🌙 Natt</Text>
+        <View style={[styles.statusBadge, lightsOn ? styles.statusBadgeWarning : styles.statusBadgeSleep]}>
+          <Text style={[styles.statusText, !lightsOn && styles.statusTextSleep]}>
+            {lightsOn ? '⚠️ Lampan på!' : '😴 Sover...'}
+          </Text>
         </View>
       )}
       <TouchableOpacity
@@ -36,6 +38,9 @@ export const LightsToggle: React.FC<LightsToggleProps> = ({
         accessibilityState={{ checked: lightsOn }}
       >
         <Text style={styles.emoji}>{lightsOn ? '💡' : '🌙'}</Text>
+        <Text style={[styles.label, !lightsOn && styles.labelOff]}>
+          {lightsOn ? 'PÅ' : 'AV'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -47,31 +52,48 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: scale(8),
   },
-  nightIndicator: {
-    backgroundColor: 'rgba(75, 0, 130, 0.3)',
-    paddingHorizontal: scale(8),
-    paddingVertical: verticalScale(4),
-    borderRadius: moderateScale(8),
+  statusBadge: {
+    paddingHorizontal: scale(10),
+    paddingVertical: verticalScale(5),
+    borderRadius: moderateScale(12),
   },
-  nightText: {
+  statusBadgeWarning: {
+    backgroundColor: 'rgba(255, 107, 107, 0.25)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 107, 107, 0.5)',
+  },
+  statusBadgeSleep: {
+    backgroundColor: 'rgba(100, 100, 200, 0.25)',
+    borderWidth: 1,
+    borderColor: 'rgba(100, 100, 200, 0.5)',
+  },
+  statusBadgeDark: {
+    backgroundColor: 'rgba(75, 0, 130, 0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(75, 0, 130, 0.4)',
+  },
+  statusText: {
     fontSize: moderateScale(12),
+    color: '#FF6B6B',
+    fontWeight: '600',
+  },
+  statusTextSleep: {
     color: '#9370DB',
-    fontWeight: '500',
   },
   button: {
-    width: moderateScale(44),
-    height: moderateScale(44),
-    borderRadius: moderateScale(22),
+    width: moderateScale(52),
+    height: moderateScale(52),
+    borderRadius: moderateScale(26),
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
   },
   buttonOn: {
-    backgroundColor: 'rgba(255, 215, 0, 0.2)',
+    backgroundColor: 'rgba(255, 215, 0, 0.25)',
     borderColor: '#FFD700',
   },
   buttonOff: {
-    backgroundColor: 'rgba(75, 0, 130, 0.2)',
+    backgroundColor: 'rgba(30, 20, 80, 0.5)',
     borderColor: '#4B0082',
   },
   buttonWarning: {
@@ -79,6 +101,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 107, 107, 0.2)',
   },
   emoji: {
-    fontSize: moderateScale(22),
+    fontSize: moderateScale(20),
+  },
+  label: {
+    fontSize: moderateScale(9),
+    fontWeight: 'bold',
+    color: '#B8860B',
+    marginTop: -2,
+  },
+  labelOff: {
+    color: '#9370DB',
   },
 });

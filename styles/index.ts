@@ -9,6 +9,12 @@ export const styles = StyleSheet.create({
   darkContainer: {
     backgroundColor: '#000000',
   },
+  lightsOffContainer: {
+    backgroundColor: '#1a1a2e',
+  },
+  lightsOnContainer: {
+    backgroundColor: '#FFFFF5',
+  },
   selectionScrollContent: {
     flexGrow: 1,
     paddingHorizontal: scale(20),
