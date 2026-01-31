@@ -186,7 +186,7 @@ export function GameScreen({
                     isTablet && styles.tabletTitle,
                   ]}
                 >
-                  {displayName} ✏️
+                  {displayName} ✏️🤬
                 </Text>
               </TouchableOpacity>
               <LifeStageIndicator
