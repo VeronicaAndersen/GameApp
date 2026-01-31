@@ -12,7 +12,6 @@ const PNG_ASPECT_RATIO = 624 / 416; // Height/Width ratio of cropped PNGs
 interface CharacterIconProps {
   characterType: CharacterType;
   size: number;
-  isTablet: boolean;
   containerSize?: number;
   lifeStage?: LifeStage;
   isSick?: boolean;
@@ -28,7 +27,6 @@ interface CharacterIconProps {
 export const CharacterIcon = React.memo<CharacterIconProps>(({
   characterType,
   size,
-  isTablet,
   containerSize,
   lifeStage = 'adult',
   isSick = false,
@@ -40,8 +38,11 @@ export const CharacterIcon = React.memo<CharacterIconProps>(({
     if (containerSize) {
       return containerSize * SVG_SIZE_MULTIPLIERS.containerBased;
     }
-    return isTablet ? size * SVG_SIZE_MULTIPLIERS.tablet : size * SVG_SIZE_MULTIPLIERS.phone;
-  }, [containerSize, isTablet, size]);
+    if (characterType === 'lizard' || characterType === 'cat') {
+      return size * SVG_SIZE_MULTIPLIERS.phone * 0.8; // Reduce size by 20% for lizard and cat
+    }
+    return size * SVG_SIZE_MULTIPLIERS.phone;
+  }, [containerSize, size, characterType]);
 
   const renderCharacter = () => {
     switch (characterType) {

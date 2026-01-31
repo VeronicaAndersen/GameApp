@@ -8,7 +8,6 @@ interface ActionButtonProps {
   colorStyle: ViewStyle;
   onPress: () => void;
   disabled: boolean;
-  isTablet: boolean;
   accessibilityLabel: string;
   accessibilityHint: string;
 }
@@ -19,7 +18,6 @@ export const ActionButton = React.memo<ActionButtonProps>(({
   colorStyle,
   onPress,
   disabled,
-  isTablet,
   accessibilityLabel,
   accessibilityHint,
 }) => (
@@ -27,7 +25,6 @@ export const ActionButton = React.memo<ActionButtonProps>(({
     style={[
       styles.actionButton,
       colorStyle,
-      isTablet && styles.tabletActionButton,
       disabled && styles.disabledActionButton,
     ]}
     onPress={onPress}
@@ -39,12 +36,7 @@ export const ActionButton = React.memo<ActionButtonProps>(({
     accessibilityState={{ disabled }}
   >
     <Text style={styles.actionEmoji}>{emoji}</Text>
-    <Text
-      style={[
-        styles.actionButtonText,
-        isTablet && styles.tabletActionButtonText,
-      ]}
-    >
+    <Text style={styles.actionButtonText}>
       {label}
     </Text>
   </TouchableOpacity>

@@ -52,15 +52,11 @@ export const moderateScale = (size: number, factor: number = 0.5) => {
 };
 
 // Responsive size based on device type
-export const responsiveSize = (phone: number, tablet: number, desktop?: number) => {
+export const responsiveSize = (phone: number) => {
   const deviceType = getDeviceType();
   switch (deviceType) {
     case 'phone':
       return moderateScale(phone);
-    case 'tablet':
-      return moderateScale(tablet);
-    case 'desktop':
-      return moderateScale(desktop || tablet);
     default:
       return moderateScale(phone);
   }

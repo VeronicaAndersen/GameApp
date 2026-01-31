@@ -206,20 +206,22 @@ export const SpaceBackground: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
+    width: 1024, // iPad width in landscape
+    height: 768, // iPad height in landscape
   },
   star: {
     position: 'absolute',
     color: '#FFE4A0',
     fontWeight: 'bold',
   },
-  star1: { top: '5%', left: '8%', fontSize: 10 },
-  star2: { top: '12%', left: '55%', fontSize: 8 },
-  star3: { top: '25%', right: '10%', fontSize: 14 },
-  star4: { top: '40%', left: '3%', fontSize: 8 },
-  star5: { top: '60%', right: '15%', fontSize: 10 },
-  star6: { top: '75%', left: '20%', fontSize: 12 },
-  star7: { top: '85%', right: '8%', fontSize: 8 },
-  star8: { top: '50%', left: '45%', fontSize: 6 },
+  star1: { top: '5%', left: '8%', fontSize: 8 }, // Adjusted font size
+  star2: { top: '12%', left: '55%', fontSize: 6 },
+  star3: { top: '25%', right: '10%', fontSize: 10 },
+  star4: { top: '40%', left: '3%', fontSize: 6 },
+  star5: { top: '60%', right: '15%', fontSize: 8 },
+  star6: { top: '75%', left: '20%', fontSize: 10 },
+  star7: { top: '85%', right: '8%', fontSize: 6 },
+  star8: { top: '50%', left: '45%', fontSize: 4 },
   planet: {
     position: 'absolute',
     opacity: 0.5,
@@ -227,17 +229,17 @@ const styles = StyleSheet.create({
   planet1: {
     top: '8%',
     right: '5%',
-    fontSize: 28,
+    fontSize: 24, // Adjusted font size
   },
   planet2: {
     bottom: '15%',
     left: '3%',
-    fontSize: 20,
+    fontSize: 18,
   },
   planet3: {
     top: '45%',
     right: '3%',
-    fontSize: 16,
+    fontSize: 14,
     opacity: 0.35,
   },
   alien: {
@@ -247,17 +249,17 @@ const styles = StyleSheet.create({
   alien1: {
     bottom: '8%',
     right: '10%',
-    fontSize: 22,
+    fontSize: 20, // Adjusted font size
   },
   rocket: {
     top: '18%',
     left: '5%',
-    fontSize: 18,
+    fontSize: 16, // Adjusted font size
     opacity: 0.4,
   },
   ufo: {
     top: '65%',
     left: '8%',
-    fontSize: 20,
+    fontSize: 18, // Adjusted font size
   },
 });

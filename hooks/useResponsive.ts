@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Dimensions } from 'react-native';
-import { BREAKPOINTS, getDeviceType } from '../utils/responsive';
 
 export interface ResponsiveInfo {
   width: number;
   height: number;
   isPhone: boolean;
-  isTablet: boolean;
   isDesktop: boolean;
-  deviceType: 'phone' | 'tablet' | 'desktop';
+  deviceType: 'phone' | 'desktop';
   orientation: 'portrait' | 'landscape';
 }
 
@@ -19,15 +17,13 @@ export interface ResponsiveInfo {
 export function useResponsive(): ResponsiveInfo {
   const getResponsiveInfo = (): ResponsiveInfo => {
     const { width, height } = Dimensions.get('window');
-    const deviceType = getDeviceType();
 
     return {
       width,
       height,
-      isPhone: width < BREAKPOINTS.tablet,
-      isTablet: width >= BREAKPOINTS.tablet && width < BREAKPOINTS.desktop,
-      isDesktop: width >= BREAKPOINTS.desktop,
-      deviceType,
+      isPhone: false,
+      isDesktop: true,
+      deviceType: 'desktop',
       orientation: width > height ? 'landscape' : 'portrait',
     };
   };

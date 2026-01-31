@@ -14,11 +14,8 @@ export interface CharacterSelectionScreenProps {
 }
 
 export function CharacterSelectionScreen({
-  dimensions,
   onSelectCharacter,
 }: CharacterSelectionScreenProps): React.JSX.Element {
-  const isTablet = dimensions.width >= 768;
-
   return (
     <SafeAreaView
       style={styles.container}
@@ -26,27 +23,14 @@ export function CharacterSelectionScreen({
     >
       <SpaceBackground />
       <ScrollView
-        contentContainerStyle={[
-          styles.selectionScrollContent,
-          isTablet && styles.tabletScrollContent,
-        ]}
+        contentContainerStyle={styles.selectionScrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.selectionContent}>
-          <Text
-            style={[
-              styles.selectionTitle,
-              isTablet && styles.tabletTitle,
-            ]}
-          >
+          <Text style={styles.selectionTitle}>
             Välj din karaktär
           </Text>
-          <Text
-            style={[
-              styles.selectionSubtitle,
-              isTablet && styles.tabletSubtitle,
-            ]}
-          >
+          <Text style={styles.selectionSubtitle}>
             Sedan startar ditt äventyr
           </Text>
 
@@ -54,10 +38,7 @@ export function CharacterSelectionScreen({
             {CHARACTERS.map((character) => (
               <TouchableOpacity
                 key={character.type}
-                style={[
-                  styles.characterCard,
-                  isTablet && styles.tabletCharacterCard,
-                ]}
+                style={styles.characterCard}
                 onPress={() => onSelectCharacter(character.type)}
                 activeOpacity={0.7}
                 accessibilityRole="button"
@@ -68,7 +49,6 @@ export function CharacterSelectionScreen({
                   style={[
                     styles.characterEmojiContainer,
                     { backgroundColor: character.color + '20' },
-                    isTablet && styles.tabletCharacterEmojiContainer,
                     character.type === 'lizard' && styles.lizardEmojiContainer,
                     character.type === 'cat' && styles.catEmojiContainer,
                   ]}
@@ -76,16 +56,10 @@ export function CharacterSelectionScreen({
                   <CharacterIcon
                     characterType={character.type}
                     size={moderateScale(50)}
-                    isTablet={isTablet}
-                    containerSize={isTablet ? scale(150) : scale(100)}
+                    containerSize={scale(100)}
                   />
                 </View>
-                <Text
-                  style={[
-                    styles.characterName,
-                    isTablet && styles.tabletCharacterName,
-                  ]}
-                >
+                <Text style={styles.characterName}>
                   {character.name}
                 </Text>
               </TouchableOpacity>
