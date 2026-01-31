@@ -10,20 +10,18 @@ import { styles } from '../styles';
 
 export interface CharacterSelectionScreenProps {
   dimensions: Dimensions;
-  isDarkMode: boolean;
   onSelectCharacter: (type: CharacterType) => Promise<void>;
 }
 
 export function CharacterSelectionScreen({
   dimensions,
-  isDarkMode,
   onSelectCharacter,
 }: CharacterSelectionScreenProps): React.JSX.Element {
   const isTablet = dimensions.width >= 768;
 
   return (
     <SafeAreaView
-      style={[styles.container, isDarkMode && styles.darkContainer]}
+      style={styles.container}
       edges={['top', 'bottom', 'left', 'right']}
     >
       <SpaceBackground />
@@ -38,7 +36,6 @@ export function CharacterSelectionScreen({
           <Text
             style={[
               styles.selectionTitle,
-              isDarkMode && styles.darkTitle,
               isTablet && styles.tabletTitle,
             ]}
           >
@@ -47,7 +44,6 @@ export function CharacterSelectionScreen({
           <Text
             style={[
               styles.selectionSubtitle,
-              isDarkMode && styles.darkSubtitle,
               isTablet && styles.tabletSubtitle,
             ]}
           >
@@ -60,7 +56,6 @@ export function CharacterSelectionScreen({
                 key={character.type}
                 style={[
                   styles.characterCard,
-                  isDarkMode && styles.darkCard,
                   isTablet && styles.tabletCharacterCard,
                 ]}
                 onPress={() => onSelectCharacter(character.type)}
@@ -88,7 +83,6 @@ export function CharacterSelectionScreen({
                 <Text
                   style={[
                     styles.characterName,
-                    isDarkMode && styles.darkTitle,
                     isTablet && styles.tabletCharacterName,
                   ]}
                 >

@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, Animated, TextInput, Modal, StyleSheet } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CharacterIcon } from '../components/CharacterIcon';
 import { GameState, Dimensions } from '../types';
 import { CHARACTERS, INITIAL_STATE, XP_PER_LEVEL, MAX_HUNGER, MAX_HAPPINESS, MAX_ENERGY, MAX_HEALTH } from '../constants';
 import { ANIMATION_CONFIG } from '../constants/animations';
-import { scale, moderateScale, verticalScale } from '../utils/responsive';
+import { scale, moderateScale } from '../utils/responsive';
 import { styles } from '../styles';
 import { useGameActions } from '../hooks/useGameActions';
 import { useLevelUp } from '../hooks/useLevelUp';
@@ -17,6 +17,9 @@ import { EventNotification } from '../components/EventNotification';
 import { SnoringAnimation } from '../components/SnoringAnimation';
 import { ActionEmojis, ActionType } from '../components/ActionEmojis';
 import { PoopDisplay } from '../components/PoopDisplay';
+import { StatBar } from '../components/StatBar';
+import { ActionButton } from '../components/ActionButton';
+import { RenameModal } from '../components/RenameModal';
 import { SickIndicator } from '../components/SickIndicator';
 import { DeathScreen } from '../components/DeathScreen';
 import { LightsToggle } from '../components/LightsToggle';
@@ -28,14 +31,12 @@ import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
 export interface GameScreenProps {
   dimensions: Dimensions;
-  isDarkMode: boolean;
   gameState: GameState;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>;
 }
 
 export function GameScreen({
   dimensions,
-  isDarkMode,
   gameState,
   setGameState,
 }: GameScreenProps): React.JSX.Element {
@@ -43,7 +44,6 @@ export function GameScreen({
   const character = CHARACTERS.find((c) => c.type === gameState.character);
 
   const [showRenameModal, setShowRenameModal] = useState(false);
-  const [newName, setNewName] = useState('');
   const [isSnoring, setIsSnoring] = useState(false);
   const [showActionEmojis, setShowActionEmojis] = useState(false);
   const [currentActionType, setCurrentActionType] = useState<ActionType>('eat');
@@ -62,15 +62,6 @@ export function GameScreen({
 
   const { currentEvent, dismissEvent } = useRandomEvents(gameState, setGameState);
   const { characterScale, characterRotate, playJumpAnimation, playShakeAnimation, playSpinAnimation, playHappyAnimation } = useCharacterAnimation();
-
-  const handleRename = useCallback(() => {
-    if (newName.trim() && character) {
-      setGameState(prev => ({ ...prev, customName: newName.trim() }));
-      setShowRenameModal(false);
-      setNewName('');
-      playHappyAnimation();
-    }
-  }, [newName, character, setGameState, playHappyAnimation]);
 
   const displayName = gameState.customName || (character?.name ?? '');
   const lightsOff = !tamagotchi.sleep.lightsOn;
@@ -165,9 +156,8 @@ export function GameScreen({
     <SafeAreaView
       style={[
         styles.container,
-        isDarkMode && styles.darkContainer,
-        !isDarkMode && lightsOff && styles.lightsOffContainer,
-        !isDarkMode && !lightsOff && styles.lightsOnContainer,
+        lightsOff && styles.lightsOffContainer,
+        !lightsOff && styles.lightsOnContainer,
       ]}
       edges={['top', 'bottom', 'left', 'right']}
     >
@@ -193,7 +183,6 @@ export function GameScreen({
                 <Text
                   style={[
                     styles.gameTitle,
-                    isDarkMode && styles.darkTitle,
                     isTablet && styles.tabletTitle,
                   ]}
                 >
@@ -215,7 +204,6 @@ export function GameScreen({
               <TouchableOpacity
                 style={[
                   styles.backButton,
-                  isDarkMode && styles.darkBackButton,
                   isTablet && styles.tabletBackButton,
                 ]}
                 onPress={() => setGameState(INITIAL_STATE)}
@@ -226,7 +214,6 @@ export function GameScreen({
               >
                 <Text style={[
                   styles.backButtonText,
-                  isDarkMode && styles.darkSubtitle,
                   isTablet && styles.tabletBackButtonText,
                 ]}>
                   Byt karaktär
@@ -320,7 +307,6 @@ export function GameScreen({
               <Text
                 style={[
                   styles.levelText,
-                  isDarkMode && styles.darkTitle,
                   isTablet && styles.tabletLevelText,
                 ]}
                 accessibilityRole="text"
@@ -328,10 +314,7 @@ export function GameScreen({
                 Level {gameState.level}
               </Text>
               <View
-                style={[
-                  styles.xpBarContainer,
-                  isDarkMode && styles.darkXpBarContainer,
-                ]}
+                style={styles.xpBarContainer}
               >
                 <View
                   style={[
@@ -341,341 +324,53 @@ export function GameScreen({
                 />
               </View>
               <Text
-                style={[
-                  styles.xpText,
-                  isDarkMode && styles.darkSubtitle,
-                ]}
+                style={styles.xpText}
               >
                 {gameState.experience % XP_PER_LEVEL} / {XP_PER_LEVEL} XP
               </Text>
             </View>
 
             <View style={styles.statRow}>
-              <View style={styles.statItem}>
-                <Text
-                  style={[
-                    styles.statLabel,
-                    isDarkMode && styles.darkSubtitle,
-                  ]}
-                >
-                  Hunger
-                </Text>
-                <View
-                  style={[
-                    styles.statBarContainer,
-                    isDarkMode && styles.darkStatBarContainer,
-                  ]}
-                >
-                  <View
-                    style={[
-                      styles.statBar,
-                      styles.statBarHunger,
-                      { width: `${(gameState.hunger / MAX_HUNGER) * 100}%` },
-                    ]}
-                  />
-                </View>
-                <Text
-                  style={[
-                    styles.statValue,
-                    isDarkMode && styles.darkSubtitle,
-                  ]}
-                >
-                  {Math.round(gameState.hunger)}%
-                </Text>
-              </View>
-
-              <View style={styles.statItem}>
-                <Text
-                  style={[
-                    styles.statLabel,
-                    isDarkMode && styles.darkSubtitle,
-                  ]}
-                >
-                  Glädje
-                </Text>
-                <View
-                  style={[
-                    styles.statBarContainer,
-                    isDarkMode && styles.darkStatBarContainer,
-                  ]}
-                >
-                  <View
-                    style={[
-                      styles.statBar,
-                      styles.statBarHappiness,
-                      { width: `${(gameState.happiness / MAX_HAPPINESS) * 100}%` },
-                    ]}
-                  />
-                </View>
-                <Text
-                  style={[
-                    styles.statValue,
-                    isDarkMode && styles.darkSubtitle,
-                  ]}
-                >
-                  {Math.round(gameState.happiness)}%
-                </Text>
-              </View>
+              <StatBar label="Hunger" value={gameState.hunger} maxValue={MAX_HUNGER} barColor="#FF6B6B" />
+              <StatBar label="Glädje" value={gameState.happiness} maxValue={MAX_HAPPINESS} barColor="#4FC3F7" />
             </View>
 
             <View style={styles.statRow}>
-              <View style={styles.statItem}>
-                <Text
-                  style={[
-                    styles.statLabel,
-                    isDarkMode && styles.darkSubtitle,
-                  ]}
-                >
-                  Energi
-                </Text>
-                <View
-                  style={[
-                    styles.statBarContainer,
-                    isDarkMode && styles.darkStatBarContainer,
-                  ]}
-                >
-                  <View
-                    style={[
-                      styles.statBar,
-                      styles.statBarEnergy,
-                      { width: `${(gameState.energy / MAX_ENERGY) * 100}%` },
-                    ]}
-                  />
-                </View>
-                <Text
-                  style={[
-                    styles.statValue,
-                    isDarkMode && styles.darkSubtitle,
-                  ]}
-                >
-                  {Math.round(gameState.energy)}%
-                </Text>
-              </View>
-
-              <View style={styles.statItem}>
-                <Text
-                  style={[
-                    styles.statLabel,
-                    isDarkMode && styles.darkSubtitle,
-                  ]}
-                >
-                  Hälsa
-                </Text>
-                <View
-                  style={[
-                    styles.statBarContainer,
-                    isDarkMode && styles.darkStatBarContainer,
-                  ]}
-                >
-                  <View
-                    style={[
-                      styles.statBar,
-                      styles.statBarHealth,
-                      { width: `${(gameState.health / MAX_HEALTH) * 100}%` },
-                    ]}
-                  />
-                </View>
-                <Text
-                  style={[
-                    styles.statValue,
-                    isDarkMode && styles.darkSubtitle,
-                  ]}
-                >
-                  {Math.round(gameState.health)}%
-                </Text>
-              </View>
+              <StatBar label="Energi" value={gameState.energy} maxValue={MAX_ENERGY} barColor="#FFD93D" />
+              <StatBar label="Hälsa" value={gameState.health} maxValue={MAX_HEALTH} barColor="#69F0AE" />
             </View>
           </View>
 
           {/* Actions */}
           <View style={styles.actionRowContainer}>
             <View style={styles.actionRow}>
-              <TouchableOpacity
-                style={[
-                  styles.actionButton,
-                  styles.actionButtonEat,
-                  isTablet && styles.tabletActionButton,
-                  gameState.hunger >= MAX_HUNGER && styles.disabledActionButton,
-                ]}
-                onPress={handleEatWithAnimation}
-                activeOpacity={0.8}
-                disabled={gameState.hunger >= MAX_HUNGER}
-                accessibilityRole="button"
-                accessibilityLabel={`Feed ${displayName}`}
-                accessibilityHint={`Increase hunger by 20 points, decrease energy by 5, and gain 10 experience`}
-                accessibilityState={{ disabled: gameState.hunger >= MAX_HUNGER }}
-              >
-                <Text style={styles.actionEmoji}>🍕</Text>
-                <Text
-                  style={[
-                    styles.actionButtonText,
-                    isTablet && styles.tabletActionButtonText,
-                  ]}
-                >
-                  Mat
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.actionButton,
-                  styles.actionButtonPlay,
-                  isTablet && styles.tabletActionButton,
-                  gameState.happiness >= MAX_HAPPINESS && styles.disabledActionButton,
-                ]}
-                onPress={handlePlayWithAnimation}
-                activeOpacity={0.8}
-                disabled={gameState.happiness >= MAX_HAPPINESS}
-                accessibilityRole="button"
-                accessibilityLabel={`Play with ${character.name}`}
-                accessibilityHint={`Increase happiness by 20 points, decrease energy by 10 and hunger by 5, and gain 15 experience`}
-                accessibilityState={{ disabled: gameState.happiness >= MAX_HAPPINESS }}
-              >
-                <Text style={styles.actionEmoji}>🎮</Text>
-                <Text
-                  style={[
-                    styles.actionButtonText,
-                    isTablet && styles.tabletActionButtonText,
-                  ]}
-                >
-                  Lek
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.actionButton,
-                  styles.actionButtonSleep,
-                  isTablet && styles.tabletActionButton,
-                  gameState.energy >= MAX_ENERGY && styles.disabledActionButton,
-                ]}
-                onPress={handleSleepWithAnimation}
-                activeOpacity={0.8}
-                disabled={gameState.energy >= MAX_ENERGY}
-                accessibilityRole="button"
-                accessibilityLabel={`Let ${character.name} sleep`}
-                accessibilityHint={`Increase energy by 30 points, decrease hunger by 10, and gain 5 experience`}
-                accessibilityState={{ disabled: gameState.energy >= MAX_ENERGY }}
-              >
-                <Text style={styles.actionEmoji}>😴</Text>
-                <Text
-                  style={[
-                    styles.actionButtonText,
-                    isTablet && styles.tabletActionButtonText,
-                  ]}
-                >
-                  Sov
-                </Text>
-              </TouchableOpacity>
+              <ActionButton emoji="🍕" label="Mat" colorStyle={styles.actionButtonEat}
+                onPress={handleEatWithAnimation} disabled={gameState.hunger >= MAX_HUNGER} isTablet={isTablet}
+                accessibilityLabel={`Feed ${displayName}`} accessibilityHint="Increase hunger by 20 points, decrease energy by 5, and gain 10 experience" />
+              <ActionButton emoji="🎮" label="Lek" colorStyle={styles.actionButtonPlay}
+                onPress={handlePlayWithAnimation} disabled={gameState.happiness >= MAX_HAPPINESS} isTablet={isTablet}
+                accessibilityLabel={`Play with ${character.name}`} accessibilityHint="Increase happiness by 20 points, decrease energy by 10 and hunger by 5, and gain 15 experience" />
+              <ActionButton emoji="😴" label="Sov" colorStyle={styles.actionButtonSleep}
+                onPress={handleSleepWithAnimation} disabled={gameState.energy >= MAX_ENERGY} isTablet={isTablet}
+                accessibilityLabel={`Let ${character.name} sleep`} accessibilityHint="Increase energy by 30 points, decrease hunger by 10, and gain 5 experience" />
             </View>
 
             <View style={styles.actionRow}>
-              <TouchableOpacity
-                style={[
-                  styles.actionButton,
-                  styles.actionButtonExercise,
-                  isTablet && styles.tabletActionButton,
-                  gameState.energy < 20 && styles.disabledActionButton,
-                ]}
-                onPress={handleExerciseWithAnimation}
-                activeOpacity={0.8}
-                disabled={gameState.energy < 20}
-                accessibilityRole="button"
-                accessibilityLabel={`Exercise with ${character.name}`}
-                accessibilityHint={`Increase health by 15 and happiness by 10, decrease energy by 20 and hunger by 15, and gain 20 experience`}
-                accessibilityState={{ disabled: gameState.energy < 20 }}
-              >
-                <Text style={styles.actionEmoji}>🏃</Text>
-                <Text
-                  style={[
-                    styles.actionButtonText,
-                    isTablet && styles.tabletActionButtonText,
-                  ]}
-                >
-                  Träna
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.actionButton,
-                  styles.actionButtonPet,
-                  isTablet && styles.tabletActionButton,
-                  gameState.happiness >= MAX_HAPPINESS && styles.disabledActionButton,
-                ]}
-                onPress={handlePetWithAnimation}
-                activeOpacity={0.8}
-                disabled={gameState.happiness >= MAX_HAPPINESS}
-                accessibilityRole="button"
-                accessibilityLabel={`Pet ${character.name}`}
-                accessibilityHint={`Increase happiness by 15 and health by 5, and gain 8 experience`}
-                accessibilityState={{ disabled: gameState.happiness >= MAX_HAPPINESS }}
-              >
-                <Text style={styles.actionEmoji}>❤️</Text>
-                <Text
-                  style={[
-                    styles.actionButtonText,
-                    isTablet && styles.tabletActionButtonText,
-                  ]}
-                >
-                  Klappa
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.actionButton,
-                  styles.actionButtonMedicine,
-                  isTablet && styles.tabletActionButton,
-                  gameState.health >= MAX_HEALTH && styles.disabledActionButton,
-                ]}
-                onPress={handleMedicineWithAnimation}
-                activeOpacity={0.8}
-                disabled={gameState.health >= MAX_HEALTH}
-                accessibilityRole="button"
-                accessibilityLabel={`Give ${character.name} medicine`}
-                accessibilityHint={`Increase health by 30 points, decrease happiness by 10, and gain 5 experience`}
-                accessibilityState={{ disabled: gameState.health >= MAX_HEALTH }}
-              >
-                <Text style={styles.actionEmoji}>💊</Text>
-                <Text
-                  style={[
-                    styles.actionButtonText,
-                    isTablet && styles.tabletActionButtonText,
-                  ]}
-                >
-                  Medicin
-                </Text>
-              </TouchableOpacity>
+              <ActionButton emoji="🏃" label="Träna" colorStyle={styles.actionButtonExercise}
+                onPress={handleExerciseWithAnimation} disabled={gameState.energy < 20} isTablet={isTablet}
+                accessibilityLabel={`Exercise with ${character.name}`} accessibilityHint="Increase health by 15 and happiness by 10, decrease energy by 20 and hunger by 15, and gain 20 experience" />
+              <ActionButton emoji="❤️" label="Klappa" colorStyle={styles.actionButtonPet}
+                onPress={handlePetWithAnimation} disabled={gameState.happiness >= MAX_HAPPINESS} isTablet={isTablet}
+                accessibilityLabel={`Pet ${character.name}`} accessibilityHint="Increase happiness by 15 and health by 5, and gain 8 experience" />
+              <ActionButton emoji="💊" label="Medicin" colorStyle={styles.actionButtonMedicine}
+                onPress={handleMedicineWithAnimation} disabled={gameState.health >= MAX_HEALTH} isTablet={isTablet}
+                accessibilityLabel={`Give ${character.name} medicine`} accessibilityHint="Increase health by 30 points, decrease happiness by 10, and gain 5 experience" />
             </View>
 
-            {/* Third row - Clean button */}
             <View style={styles.actionRowCenter}>
-              <TouchableOpacity
-                style={[
-                  styles.actionButton,
-                  styles.actionButtonClean,
-                  isTablet && styles.tabletActionButton,
-                  gameState.poopCount === 0 && styles.disabledActionButton,
-                ]}
-                onPress={handleCleanWithAnimation}
-                activeOpacity={0.8}
-                disabled={gameState.poopCount === 0}
-                accessibilityRole="button"
-                accessibilityLabel={`Clean up after ${displayName}`}
-                accessibilityHint={`Remove all poop and gain 5 experience`}
-                accessibilityState={{ disabled: gameState.poopCount === 0 }}
-              >
-                <Text style={styles.actionEmoji}>🧹</Text>
-                <Text
-                  style={[
-                    styles.actionButtonText,
-                    isTablet && styles.tabletActionButtonText,
-                  ]}
-                >
-                  Städa {gameState.poopCount > 0 ? `(${gameState.poopCount})` : ''}
-                </Text>
-              </TouchableOpacity>
+              <ActionButton emoji="🧹" label={`Städa ${gameState.poopCount > 0 ? `(${gameState.poopCount})` : ''}`} colorStyle={styles.actionButtonClean}
+                onPress={handleCleanWithAnimation} disabled={gameState.poopCount === 0} isTablet={isTablet}
+                accessibilityLabel={`Clean up after ${displayName}`} accessibilityHint="Remove all poop and gain 5 experience" />
             </View>
           </View>
         </View>
@@ -685,7 +380,6 @@ export function GameScreen({
       <EventNotification
         event={currentEvent}
         onDismiss={dismissEvent}
-        isDarkMode={isDarkMode}
         isTablet={isTablet}
       />
 
@@ -700,141 +394,18 @@ export function GameScreen({
       />
 
       {/* Rename Modal */}
-      <Modal
+      <RenameModal
         visible={showRenameModal}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowRenameModal(false)}
-      >
-        <View style={renameModalStyles.overlay}>
-          <View style={[renameModalStyles.modal, isDarkMode && renameModalStyles.darkModal, isTablet && renameModalStyles.tabletModal]}>
-            <Text style={[renameModalStyles.title, isDarkMode && renameModalStyles.darkTitle, isTablet && renameModalStyles.tabletTitle]}>
-              Ge {character.name} ett nytt namn
-            </Text>
-            <TextInput
-              style={[renameModalStyles.input, isDarkMode && renameModalStyles.darkInput, isTablet && renameModalStyles.tabletInput]}
-              value={newName}
-              onChangeText={setNewName}
-              placeholder={gameState.customName || character.name}
-              placeholderTextColor="#8B8FC7"
-              autoFocus
-              maxLength={20}
-              accessibilityLabel="Character name input"
-              accessibilityHint="Enter a custom name for your character"
-            />
-            <View style={renameModalStyles.buttons}>
-              <TouchableOpacity
-                style={[renameModalStyles.button, renameModalStyles.cancelButton, isTablet && renameModalStyles.tabletButton]}
-                onPress={() => {
-                  setShowRenameModal(false);
-                  setNewName('');
-                }}
-                activeOpacity={0.8}
-              >
-                <Text style={[renameModalStyles.buttonText, isTablet && renameModalStyles.tabletButtonText]}>Avbryt</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[renameModalStyles.button, renameModalStyles.confirmButton, isTablet && renameModalStyles.tabletButton]}
-                onPress={handleRename}
-                activeOpacity={0.8}
-                disabled={!newName.trim()}
-              >
-                <Text style={[renameModalStyles.buttonText, isTablet && renameModalStyles.tabletButtonText]}>Spara</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        currentName={gameState.customName || ''}
+        characterName={character.name}
+        onRename={(name: string) => {
+          setGameState(prev => ({ ...prev, customName: name }));
+          setShowRenameModal(false);
+          playHappyAnimation();
+        }}
+        onClose={() => setShowRenameModal(false)}
+        isTablet={isTablet}
+      />
     </SafeAreaView>
   );
 }
-
-const renameModalStyles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: scale(20),
-  },
-  modal: {
-    backgroundColor: '#141832',
-    borderRadius: moderateScale(20),
-    padding: scale(24),
-    width: '90%',
-    maxWidth: scale(400),
-    borderWidth: 1,
-    borderColor: '#2A2F5A',
-    shadowColor: '#7B68EE',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  darkModal: {
-    backgroundColor: '#141832',
-  },
-  tabletModal: {
-    padding: scale(32),
-  },
-  title: {
-    fontSize: moderateScale(20),
-    fontWeight: '700',
-    color: '#E0E4FF',
-    marginBottom: verticalScale(16),
-    textAlign: 'center',
-  },
-  darkTitle: {
-    color: '#E0E4FF',
-  },
-  tabletTitle: {
-    fontSize: moderateScale(24),
-  },
-  input: {
-    backgroundColor: '#1A1F3A',
-    borderRadius: moderateScale(12),
-    padding: scale(12),
-    fontSize: moderateScale(16),
-    color: '#E0E4FF',
-    marginBottom: verticalScale(20),
-    borderWidth: 2,
-    borderColor: '#2A2F5A',
-  },
-  darkInput: {
-    backgroundColor: '#1A1F3A',
-    color: '#E0E4FF',
-    borderColor: '#2A2F5A',
-  },
-  tabletInput: {
-    padding: scale(16),
-    fontSize: moderateScale(18),
-  },
-  buttons: {
-    flexDirection: 'row',
-    gap: scale(12),
-  },
-  button: {
-    flex: 1,
-    paddingVertical: verticalScale(12),
-    paddingHorizontal: scale(20),
-    borderRadius: moderateScale(12),
-    alignItems: 'center',
-  },
-  tabletButton: {
-    paddingVertical: verticalScale(14),
-  },
-  cancelButton: {
-    backgroundColor: '#2A2F5A',
-  },
-  confirmButton: {
-    backgroundColor: '#7B68EE',
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: moderateScale(16),
-    fontWeight: '600',
-  },
-  tabletButtonText: {
-    fontSize: moderateScale(18),
-  },
-});

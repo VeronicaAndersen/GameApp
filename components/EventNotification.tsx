@@ -6,14 +6,12 @@ import { moderateScale, scale } from '../utils/responsive';
 export interface EventNotificationProps {
   event: RandomEvent | null;
   onDismiss: () => void;
-  isDarkMode: boolean;
   isTablet: boolean;
 }
 
 export const EventNotification = React.memo<EventNotificationProps>(function EventNotification({
   event,
   onDismiss,
-  isDarkMode,
   isTablet,
 }: EventNotificationProps): React.JSX.Element {
   // Memoize effect entries to prevent recalculation
@@ -43,7 +41,6 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
         <View
           style={[
             styles.eventCard,
-            isDarkMode && styles.darkEventCard,
             isTablet && styles.tabletEventCard,
           ]}
         >
@@ -51,7 +48,6 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
           <Text
             style={[
               styles.eventTitle,
-              isDarkMode && styles.darkEventTitle,
               isTablet && styles.tabletEventTitle,
             ]}
           >
@@ -60,7 +56,6 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
           <Text
             style={[
               styles.eventMessage,
-              isDarkMode && styles.darkEventMessage,
               isTablet && styles.tabletEventMessage,
             ]}
           >
@@ -79,7 +74,6 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
                   style={[
                     styles.effectText,
                     isPositive ? styles.positiveEffect : styles.negativeEffect,
-                    isDarkMode && styles.darkEffectText,
                     isTablet && styles.tabletEffectText,
                   ]}
                 >
@@ -137,9 +131,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  darkEventCard: {
-    backgroundColor: '#141832',
-  },
   tabletEventCard: {
     padding: scale(32),
     borderRadius: moderateScale(24),
@@ -155,9 +146,6 @@ const styles = StyleSheet.create({
     marginBottom: scale(8),
     textAlign: 'center',
   },
-  darkEventTitle: {
-    color: '#E0E4FF',
-  },
   tabletEventTitle: {
     fontSize: moderateScale(28),
   },
@@ -167,9 +155,6 @@ const styles = StyleSheet.create({
     marginBottom: scale(16),
     textAlign: 'center',
     lineHeight: moderateScale(22),
-  },
-  darkEventMessage: {
-    color: '#8B8FC7',
   },
   tabletEventMessage: {
     fontSize: moderateScale(18),
@@ -188,9 +173,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(10),
     paddingVertical: scale(4),
     borderRadius: moderateScale(12),
-  },
-  darkEffectText: {
-    opacity: 0.9,
   },
   tabletEffectText: {
     fontSize: moderateScale(16),

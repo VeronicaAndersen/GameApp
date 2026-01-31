@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Dimensions, StatusBar, useColorScheme } from 'react-native';
+import { Dimensions, StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { CharacterSelectionScreen } from './screens/CharacterSelectionScreen';
@@ -16,7 +16,6 @@ import { usePersistentGameState } from './hooks/usePersistentGameState';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
   const [dimensions, setDimensions] = useState({
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
@@ -38,13 +37,11 @@ function App() {
         {gameState.character === null ? (
           <CharacterSelectionScreen
             dimensions={dimensions}
-            isDarkMode={isDarkMode}
             onSelectCharacter={selectCharacter}
           />
         ) : (
           <GameScreen
             dimensions={dimensions}
-            isDarkMode={isDarkMode}
             gameState={gameState}
             setGameState={setGameState}
           />

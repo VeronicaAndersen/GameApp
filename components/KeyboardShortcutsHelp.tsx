@@ -5,13 +5,11 @@ import { moderateScale } from '../utils/responsive';
 export interface KeyboardShortcutsHelpProps {
   visible: boolean;
   onClose: () => void;
-  isDarkMode: boolean;
 }
 
 export const KeyboardShortcutsHelp: React.FC<KeyboardShortcutsHelpProps> = ({
   visible,
   onClose,
-  isDarkMode,
 }) => {
   // Only show on web platform
   if (Platform.OS !== 'web') {
@@ -32,22 +30,22 @@ export const KeyboardShortcutsHelp: React.FC<KeyboardShortcutsHelpProps> = ({
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
-        <View style={[styles.container, isDarkMode && styles.containerDark]}>
+        <View style={styles.container}>
           <TouchableOpacity activeOpacity={1} onPress={(e) => e.stopPropagation()}>
             <View style={styles.content}>
-              <Text style={[styles.title, isDarkMode && styles.textDark]}>
+              <Text style={styles.title}>
                 ⌨️ Keyboard Shortcuts
               </Text>
 
               <View style={styles.shortcutsList}>
                 {shortcuts.map((shortcut, index) => (
                   <View key={index} style={styles.shortcutRow}>
-                    <View style={[styles.keyBadge, isDarkMode && styles.keyBadgeDark]}>
-                      <Text style={[styles.keyText, isDarkMode && styles.keyTextDark]}>
+                    <View style={styles.keyBadge}>
+                      <Text style={styles.keyText}>
                         {shortcut.key}
                       </Text>
                     </View>
-                    <Text style={[styles.actionText, isDarkMode && styles.textDark]}>
+                    <Text style={styles.actionText}>
                       {shortcut.action}
                     </Text>
                   </View>
@@ -86,9 +84,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
   },
-  containerDark: {
-    backgroundColor: '#141832',
-  },
   content: {
     padding: moderateScale(24),
   },
@@ -98,9 +93,6 @@ const styles = StyleSheet.create({
     color: '#E0E4FF',
     marginBottom: moderateScale(20),
     textAlign: 'center',
-  },
-  textDark: {
-    color: '#E0E4FF',
   },
   shortcutsList: {
     gap: moderateScale(12),
@@ -120,18 +112,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2A2F5A',
   },
-  keyBadgeDark: {
-    backgroundColor: '#1E2248',
-    borderColor: '#2A2F5A',
-  },
   keyText: {
     fontSize: moderateScale(14),
     fontWeight: '600',
     color: '#E0E4FF',
     fontFamily: 'monospace',
-  },
-  keyTextDark: {
-    color: '#E0E4FF',
   },
   actionText: {
     fontSize: moderateScale(16),
