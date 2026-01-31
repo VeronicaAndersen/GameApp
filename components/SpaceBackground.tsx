@@ -206,8 +206,6 @@ export const SpaceBackground: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    width: 1024, // iPad width in landscape
-    height: 768, // iPad height in landscape
   },
   star: {
     position: 'absolute',

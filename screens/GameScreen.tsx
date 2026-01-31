@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, Animated } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CharacterIcon } from '../components/CharacterIcon';
-import { GameState, Dimensions } from '../types';
+import { GameState, Dimensions as ScreenDimensions } from '../types';
 import { CHARACTERS, INITIAL_STATE, XP_PER_LEVEL, MAX_HUNGER, MAX_HAPPINESS, MAX_ENERGY, MAX_HEALTH } from '../constants';
 import { ANIMATION_CONFIG } from '../constants/animations';
 import { scale, moderateScale } from '../utils/responsive';
@@ -30,7 +30,7 @@ import { useTimeoutManager } from '../utils/timeoutManager';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
 export interface GameScreenProps {
-  dimensions: Dimensions;
+  dimensions: ScreenDimensions;
   gameState: GameState;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>;
 }
@@ -40,6 +40,7 @@ export function GameScreen({
   gameState,
   setGameState,
 }: GameScreenProps): React.JSX.Element {
+  const windowHeight = Dimensions.get('window').height; // Dynamically calculate height
   const isTablet = dimensions.width >= 768;
   const character = CHARACTERS.find((c) => c.type === gameState.character);
 
@@ -154,19 +155,18 @@ export function GameScreen({
 
   return (
     <SafeAreaView
-      style={[
-        styles.container,
-        lightsOff && styles.lightsOffContainer,
-        !lightsOff && styles.lightsOnContainer,
-      ]}
+      style={{
+        maxHeight: windowHeight,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        ...styles.container,
+        ...(lightsOff ? styles.lightsOffContainer : styles.lightsOnContainer),
+      }}
       edges={['top', 'bottom', 'left', 'right']}
     >
       <SpaceBackground />
       <ScrollView
-        contentContainerStyle={[
-          styles.gameScrollContent,
-          isTablet && styles.tabletScrollContent,
-        ]}
+        contentContainerStyle={styles.gameScrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.gameContent}>

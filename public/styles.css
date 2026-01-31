@@ -11,8 +11,8 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100dvh;
   min-height: 100vh; /* Fallback for browsers that don't support dvh */
+  min-height: 100dvh;
 }
 
 #root {
@@ -81,11 +81,11 @@ body {
 }
 
 /* Landscape orientation support */
-@media screen and (orientation: landscape) and (max-height: 600px) {
+/* @media screen and (orientation: landscape) and (max-height: 600px) {
   #root {
     overflow-y: auto;
   }
-}
+} */
 
 /* High DPI displays */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
