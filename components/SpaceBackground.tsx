@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, Animated, StyleSheet, Easing } from 'react-native';
+import { View, Animated, StyleSheet, Easing } from 'react-native';
 
 /**
  * Animated space background with twinkling stars, floating planets, and aliens.
