@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { CharacterPng } from './CharacterPng';
+import { CharacterPng, CharacterMood } from './CharacterPng';
 import { AnimatedCharacter } from './AnimatedCharacter';
 import { LifeStageOverlay } from './LifeStageOverlay';
 import { CharacterType, LifeStage } from '../types';
@@ -18,6 +18,7 @@ interface CharacterIconProps {
   isSick?: boolean;
   isDead?: boolean;
   isSleeping?: boolean;
+  mood?: CharacterMood;
 }
 
 /**
@@ -33,6 +34,7 @@ export const CharacterIcon = React.memo<CharacterIconProps>(({
   isSick = false,
   isDead = false,
   isSleeping = false,
+  mood = 'normal',
 }) => {
   const svgSize = useMemo(() => {
     if (containerSize) {
@@ -44,10 +46,10 @@ export const CharacterIcon = React.memo<CharacterIconProps>(({
   const renderCharacter = () => {
     switch (characterType) {
       case 'lizard':
-        return <CharacterPng characterType="lizard" lifeStage={lifeStage} width={svgSize} height={svgSize * PNG_ASPECT_RATIO} />;
+        return <CharacterPng characterType="lizard" lifeStage={lifeStage} mood={mood} width={svgSize} height={svgSize * PNG_ASPECT_RATIO} />;
 
       case 'cat':
-        return <CharacterPng characterType="cat" lifeStage={lifeStage} width={svgSize} height={svgSize * PNG_ASPECT_RATIO} />;
+        return <CharacterPng characterType="cat" lifeStage={lifeStage} mood={mood} width={svgSize} height={svgSize * PNG_ASPECT_RATIO} />;
 
       default: {
         const character = CHARACTERS.find((c) => c.type === characterType);

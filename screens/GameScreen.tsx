@@ -75,6 +75,11 @@ export function GameScreen({
   const displayName = gameState.customName || (character?.name ?? '');
   const lightsOff = !tamagotchi.sleep.lightsOn;
 
+  // Determine character mood for PNG expression
+  const characterMood = lightsOff ? 'sleepy'
+    : (tamagotchi.health.isSick || gameState.happiness < 30) ? 'sad'
+    : 'normal';
+
   // Wrap action handlers with animations and managed timeouts
   const handleEatWithAnimation = useCallback(() => {
     handleEat();
@@ -269,6 +274,7 @@ export function GameScreen({
                   isSick={tamagotchi.health.isSick}
                   isDead={tamagotchi.health.isDead}
                   isSleeping={lightsOff}
+                  mood={characterMood}
                 />
                 {/* Snoring Animation */}
                 <SnoringAnimation visible={isSnoring} />
