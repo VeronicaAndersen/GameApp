@@ -255,7 +255,6 @@ export function GameScreen({
                 <CharacterIcon
                   characterType={character.type}
                   size={moderateScale(60)}
-                  isTablet={isTablet}
                   containerSize={isTablet ? scale(200) : scale(120)}
                   lifeStage={tamagotchi.lifeStage.currentStage}
                   isSick={tamagotchi.health.isSick}
@@ -345,31 +344,31 @@ export function GameScreen({
           <View style={styles.actionRowContainer}>
             <View style={styles.actionRow}>
               <ActionButton emoji="🍕" label="Mat" colorStyle={styles.actionButtonEat}
-                onPress={handleEatWithAnimation} disabled={gameState.hunger >= MAX_HUNGER} isTablet={isTablet}
+                onPress={handleEatWithAnimation} disabled={gameState.hunger >= MAX_HUNGER}
                 accessibilityLabel={`Feed ${displayName}`} accessibilityHint="Increase hunger by 20 points, decrease energy by 5, and gain 10 experience" />
               <ActionButton emoji="🎮" label="Lek" colorStyle={styles.actionButtonPlay}
-                onPress={handlePlayWithAnimation} disabled={gameState.happiness >= MAX_HAPPINESS} isTablet={isTablet}
+                onPress={handlePlayWithAnimation} disabled={gameState.happiness >= MAX_HAPPINESS} 
                 accessibilityLabel={`Play with ${character.name}`} accessibilityHint="Increase happiness by 20 points, decrease energy by 10 and hunger by 5, and gain 15 experience" />
               <ActionButton emoji="😴" label="Sov" colorStyle={styles.actionButtonSleep}
-                onPress={handleSleepWithAnimation} disabled={gameState.energy >= MAX_ENERGY} isTablet={isTablet}
+                onPress={handleSleepWithAnimation} disabled={gameState.energy >= MAX_ENERGY} 
                 accessibilityLabel={`Let ${character.name} sleep`} accessibilityHint="Increase energy by 30 points, decrease hunger by 10, and gain 5 experience" />
             </View>
 
             <View style={styles.actionRow}>
               <ActionButton emoji="🏃" label="Träna" colorStyle={styles.actionButtonExercise}
-                onPress={handleExerciseWithAnimation} disabled={gameState.energy < 20} isTablet={isTablet}
+                onPress={handleExerciseWithAnimation} disabled={gameState.energy < 20} 
                 accessibilityLabel={`Exercise with ${character.name}`} accessibilityHint="Increase health by 15 and happiness by 10, decrease energy by 20 and hunger by 15, and gain 20 experience" />
               <ActionButton emoji="❤️" label="Klappa" colorStyle={styles.actionButtonPet}
-                onPress={handlePetWithAnimation} disabled={gameState.happiness >= MAX_HAPPINESS} isTablet={isTablet}
+                onPress={handlePetWithAnimation} disabled={gameState.happiness >= MAX_HAPPINESS} 
                 accessibilityLabel={`Pet ${character.name}`} accessibilityHint="Increase happiness by 15 and health by 5, and gain 8 experience" />
               <ActionButton emoji="💊" label="Medicin" colorStyle={styles.actionButtonMedicine}
-                onPress={handleMedicineWithAnimation} disabled={gameState.health >= MAX_HEALTH} isTablet={isTablet}
+                onPress={handleMedicineWithAnimation} disabled={gameState.health >= MAX_HEALTH} 
                 accessibilityLabel={`Give ${character.name} medicine`} accessibilityHint="Increase health by 30 points, decrease happiness by 10, and gain 5 experience" />
             </View>
 
             <View style={styles.actionRowCenter}>
               <ActionButton emoji="🧹" label={`Städa ${gameState.poopCount > 0 ? `(${gameState.poopCount})` : ''}`} colorStyle={styles.actionButtonClean}
-                onPress={handleCleanWithAnimation} disabled={gameState.poopCount === 0} isTablet={isTablet}
+                onPress={handleCleanWithAnimation} disabled={gameState.poopCount === 0} 
                 accessibilityLabel={`Clean up after ${displayName}`} accessibilityHint="Remove all poop and gain 5 experience" />
             </View>
           </View>
