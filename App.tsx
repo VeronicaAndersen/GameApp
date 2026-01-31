@@ -34,7 +34,7 @@ function App() {
   return (
     <ErrorBoundary>
       <SafeAreaProvider>
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <StatusBar barStyle="light-content" />
         {gameState.character === null ? (
           <CharacterSelectionScreen
             dimensions={dimensions}

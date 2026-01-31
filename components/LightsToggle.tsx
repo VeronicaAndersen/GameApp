@@ -58,19 +58,19 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(12),
   },
   statusBadgeWarning: {
-    backgroundColor: 'rgba(255, 107, 107, 0.25)',
+    backgroundColor: 'rgba(255, 107, 107, 0.2)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 107, 107, 0.5)',
+    borderColor: 'rgba(255, 107, 107, 0.4)',
   },
   statusBadgeSleep: {
-    backgroundColor: 'rgba(100, 100, 200, 0.25)',
+    backgroundColor: 'rgba(123, 104, 238, 0.2)',
     borderWidth: 1,
-    borderColor: 'rgba(100, 100, 200, 0.5)',
+    borderColor: 'rgba(123, 104, 238, 0.4)',
   },
   statusBadgeDark: {
-    backgroundColor: 'rgba(75, 0, 130, 0.2)',
+    backgroundColor: 'rgba(123, 104, 238, 0.15)',
     borderWidth: 1,
-    borderColor: 'rgba(75, 0, 130, 0.4)',
+    borderColor: 'rgba(123, 104, 238, 0.3)',
   },
   statusText: {
     fontSize: moderateScale(12),
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   statusTextSleep: {
-    color: '#9370DB',
+    color: '#7B68EE',
   },
   button: {
     width: moderateScale(52),
@@ -89,16 +89,16 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   buttonOn: {
-    backgroundColor: 'rgba(255, 215, 0, 0.25)',
+    backgroundColor: 'rgba(255, 215, 0, 0.2)',
     borderColor: '#FFD700',
   },
   buttonOff: {
-    backgroundColor: 'rgba(30, 20, 80, 0.5)',
-    borderColor: '#4B0082',
+    backgroundColor: 'rgba(123, 104, 238, 0.2)',
+    borderColor: '#7B68EE',
   },
   buttonWarning: {
     borderColor: '#FF6B6B',
-    backgroundColor: 'rgba(255, 107, 107, 0.2)',
+    backgroundColor: 'rgba(255, 107, 107, 0.15)',
   },
   emoji: {
     fontSize: moderateScale(20),
@@ -106,10 +106,10 @@ const styles = StyleSheet.create({
   label: {
     fontSize: moderateScale(9),
     fontWeight: 'bold',
-    color: '#B8860B',
+    color: '#FFD700',
     marginTop: -2,
   },
   labelOff: {
-    color: '#9370DB',
+    color: '#7B68EE',
   },
 });

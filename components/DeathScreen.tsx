@@ -77,13 +77,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#141832',
     borderRadius: moderateScale(24),
     padding: scale(32),
     alignItems: 'center',
     maxWidth: scale(320),
     borderWidth: 2,
-    borderColor: '#333',
+    borderColor: '#2A2F5A',
   },
   tombstone: {
     fontSize: moderateScale(64),
@@ -92,18 +92,18 @@ const styles = StyleSheet.create({
   title: {
     fontSize: moderateScale(28),
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#E0E4FF',
     marginBottom: verticalScale(8),
   },
   name: {
     fontSize: moderateScale(22),
-    color: '#9370DB',
+    color: '#7B68EE',
     fontWeight: '600',
     marginBottom: verticalScale(16),
   },
   message: {
     fontSize: moderateScale(14),
-    color: '#AAAAAA',
+    color: '#8B8FC7',
     textAlign: 'center',
     lineHeight: moderateScale(22),
     marginBottom: verticalScale(24),
@@ -122,10 +122,10 @@ const styles = StyleSheet.create({
     gap: scale(8),
   },
   reviveButton: {
-    backgroundColor: '#9370DB',
+    backgroundColor: '#7B68EE',
   },
   newPetButton: {
-    backgroundColor: '#4A4A6A',
+    backgroundColor: '#2A2F5A',
   },
   buttonEmoji: {
     fontSize: moderateScale(20),

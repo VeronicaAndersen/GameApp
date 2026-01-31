@@ -4,16 +4,16 @@ import { scale, verticalScale, moderateScale } from '../utils/responsive';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#0B0D1A',
   },
   darkContainer: {
-    backgroundColor: '#000000',
+    backgroundColor: '#0B0D1A',
   },
   lightsOffContainer: {
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#060810',
   },
   lightsOnContainer: {
-    backgroundColor: '#FFFFF5',
+    backgroundColor: '#10132A',
   },
   selectionScrollContent: {
     flexGrow: 1,
@@ -29,24 +29,24 @@ export const styles = StyleSheet.create({
   selectionTitle: {
     fontSize: moderateScale(32),
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#E0E4FF',
     marginBottom: verticalScale(8),
     textAlign: 'center',
   },
   darkTitle: {
-    color: '#FFFFFF',
+    color: '#E0E4FF',
   },
   tabletTitle: {
     fontSize: moderateScale(48),
   },
   selectionSubtitle: {
     fontSize: moderateScale(18),
-    color: '#666666',
+    color: '#8B8FC7',
     textAlign: 'center',
     marginBottom: verticalScale(32),
   },
   darkSubtitle: {
-    color: '#CCCCCC',
+    color: '#8B8FC7',
   },
   tabletSubtitle: {
     fontSize: moderateScale(24),
@@ -55,16 +55,16 @@ export const styles = StyleSheet.create({
     gap: verticalScale(20),
   },
   characterCard: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#141832',
     borderRadius: moderateScale(16),
     padding: scale(24),
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#E0E0E0',
+    borderColor: '#2A2F5A',
   },
   darkCard: {
-    backgroundColor: '#1A1A1A',
-    borderColor: '#333333',
+    backgroundColor: '#141832',
+    borderColor: '#2A2F5A',
   },
   tabletCharacterCard: {
     padding: scale(32),
@@ -96,7 +96,7 @@ export const styles = StyleSheet.create({
   characterName: {
     fontSize: moderateScale(20),
     fontWeight: '600',
-    color: '#000000',
+    color: '#E0E4FF',
     textAlign: 'center',
   },
   tabletCharacterName: {
@@ -124,7 +124,7 @@ export const styles = StyleSheet.create({
   gameTitle: {
     fontSize: moderateScale(28),
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#E0E4FF',
     marginBottom: verticalScale(8),
     textAlign: 'center',
   },
@@ -132,26 +132,26 @@ export const styles = StyleSheet.create({
     marginTop: verticalScale(12),
     paddingVertical: verticalScale(12),
     paddingHorizontal: scale(24),
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#141832',
     borderRadius: moderateScale(8),
     borderWidth: 1,
-    borderColor: '#E0E0E0',
-    minHeight: 44, // Touch-friendly minimum
+    borderColor: '#2A2F5A',
+    minHeight: 44,
     minWidth: scale(160),
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: '#7B68EE',
     shadowOffset: {
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.15,
     shadowRadius: 2,
     elevation: 2,
   },
   darkBackButton: {
-    backgroundColor: '#1A1A1A',
-    borderColor: '#333333',
+    backgroundColor: '#141832',
+    borderColor: '#2A2F5A',
   },
   tabletBackButton: {
     paddingVertical: verticalScale(16),
@@ -160,7 +160,7 @@ export const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: moderateScale(16),
-    color: '#666666',
+    color: '#8B8FC7',
     fontWeight: '600',
   },
   tabletBackButtonText: {
@@ -205,7 +205,7 @@ export const styles = StyleSheet.create({
     borderRadius: moderateScale(20),
   },
   levelUpText: {
-    color: '#000000',
+    color: '#0B0D1A',
     fontWeight: 'bold',
     fontSize: moderateScale(16),
   },
@@ -219,7 +219,7 @@ export const styles = StyleSheet.create({
   levelText: {
     fontSize: moderateScale(24),
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#E0E4FF',
     marginBottom: verticalScale(8),
     textAlign: 'center',
   },
@@ -228,13 +228,13 @@ export const styles = StyleSheet.create({
   },
   xpBarContainer: {
     height: verticalScale(20),
-    backgroundColor: '#E0E0E0',
+    backgroundColor: '#1E2248',
     borderRadius: moderateScale(10),
     overflow: 'hidden',
     marginBottom: verticalScale(8),
   },
   darkXpBarContainer: {
-    backgroundColor: '#333333',
+    backgroundColor: '#1E2248',
   },
   xpBar: {
     height: '100%',
@@ -242,7 +242,7 @@ export const styles = StyleSheet.create({
   },
   xpText: {
     fontSize: moderateScale(14),
-    color: '#666666',
+    color: '#8B8FC7',
     textAlign: 'center',
   },
   statRow: {
@@ -253,19 +253,19 @@ export const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: moderateScale(14),
-    color: '#666666',
+    color: '#8B8FC7',
     marginBottom: verticalScale(4),
     fontWeight: '600',
   },
   statBarContainer: {
     height: verticalScale(12),
-    backgroundColor: '#E0E0E0',
+    backgroundColor: '#1E2248',
     borderRadius: moderateScale(6),
     overflow: 'hidden',
     marginBottom: verticalScale(2),
   },
   darkStatBarContainer: {
-    backgroundColor: '#333333',
+    backgroundColor: '#1E2248',
   },
   statBar: {
     height: '100%',
@@ -273,7 +273,7 @@ export const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: moderateScale(12),
-    color: '#666666',
+    color: '#8B8FC7',
     textAlign: 'right',
   },
   actionsContainer: {
@@ -289,12 +289,12 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: scale(100),
-    shadowColor: '#000',
+    shadowColor: '#7B68EE',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.3,
     shadowRadius: 3.84,
     elevation: 5,
   },
@@ -339,22 +339,22 @@ export const styles = StyleSheet.create({
     backgroundColor: '#FF6B6B',
   },
   statBarHappiness: {
-    backgroundColor: '#4ECDC4',
+    backgroundColor: '#4FC3F7',
   },
   statBarEnergy: {
     backgroundColor: '#FFD93D',
   },
   statBarHealth: {
-    backgroundColor: '#6BCF7F',
+    backgroundColor: '#69F0AE',
   },
   actionButtonEat: {
     backgroundColor: '#FF6B6B',
   },
   actionButtonPlay: {
-    backgroundColor: '#4ECDC4',
+    backgroundColor: '#4FC3F7',
   },
   actionButtonSleep: {
-    backgroundColor: '#9370DB',
+    backgroundColor: '#7B68EE',
   },
   actionButtonExercise: {
     backgroundColor: '#FF8C42',

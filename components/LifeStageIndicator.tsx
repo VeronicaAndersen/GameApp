@@ -70,6 +70,6 @@ const styles = StyleSheet.create({
   },
   age: {
     fontSize: moderateScale(11),
-    color: '#888888',
+    color: '#8B8FC7',
   },
 });

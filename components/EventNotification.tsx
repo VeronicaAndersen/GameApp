@@ -117,26 +117,28 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: scale(20),
   },
   eventCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#141832',
     borderRadius: moderateScale(20),
     padding: scale(24),
     width: '90%',
     maxWidth: scale(400),
     alignItems: 'center',
-    shadowColor: '#000',
+    borderWidth: 1,
+    borderColor: '#2A2F5A',
+    shadowColor: '#7B68EE',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.2,
     shadowRadius: 3.84,
     elevation: 5,
   },
   darkEventCard: {
-    backgroundColor: '#2C2C2E',
+    backgroundColor: '#141832',
   },
   tabletEventCard: {
     padding: scale(32),
@@ -149,25 +151,25 @@ const styles = StyleSheet.create({
   eventTitle: {
     fontSize: moderateScale(24),
     fontWeight: '700',
-    color: '#000000',
+    color: '#E0E4FF',
     marginBottom: scale(8),
     textAlign: 'center',
   },
   darkEventTitle: {
-    color: '#FFFFFF',
+    color: '#E0E4FF',
   },
   tabletEventTitle: {
     fontSize: moderateScale(28),
   },
   eventMessage: {
     fontSize: moderateScale(16),
-    color: '#666666',
+    color: '#8B8FC7',
     marginBottom: scale(16),
     textAlign: 'center',
     lineHeight: moderateScale(22),
   },
   darkEventMessage: {
-    color: '#AAAAAA',
+    color: '#8B8FC7',
   },
   tabletEventMessage: {
     fontSize: moderateScale(18),
@@ -196,15 +198,15 @@ const styles = StyleSheet.create({
     paddingVertical: scale(6),
   },
   positiveEffect: {
-    color: '#22C55E',
-    backgroundColor: '#22C55E20',
+    color: '#69F0AE',
+    backgroundColor: 'rgba(105, 240, 174, 0.15)',
   },
   negativeEffect: {
-    color: '#EF4444',
-    backgroundColor: '#EF444420',
+    color: '#FF6B6B',
+    backgroundColor: 'rgba(255, 107, 107, 0.15)',
   },
   dismissButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#7B68EE',
     paddingVertical: scale(12),
     paddingHorizontal: scale(40),
     borderRadius: moderateScale(12),

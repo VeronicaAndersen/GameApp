@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 128, 0, 0.15)',
+    backgroundColor: 'rgba(0, 180, 0, 0.12)',
     borderRadius: moderateScale(20),
   },
   emojiContainer: {

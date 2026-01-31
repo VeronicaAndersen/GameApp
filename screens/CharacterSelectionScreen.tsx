@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CharacterIcon } from '../components/CharacterIcon';
+import { SpaceBackground } from '../components/SpaceBackground';
 import { CharacterType, Dimensions } from '../types';
 import { CHARACTERS } from '../constants';
 import { scale, moderateScale } from '../utils/responsive';
@@ -25,6 +26,7 @@ export function CharacterSelectionScreen({
       style={[styles.container, isDarkMode && styles.darkContainer]}
       edges={['top', 'bottom', 'left', 'right']}
     >
+      <SpaceBackground />
       <ScrollView
         contentContainerStyle={[
           styles.selectionScrollContent,

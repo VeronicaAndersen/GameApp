@@ -22,6 +22,7 @@ import { DeathScreen } from '../components/DeathScreen';
 import { LightsToggle } from '../components/LightsToggle';
 import { LifeStageIndicator } from '../components/LifeStageIndicator';
 import { NightOverlay } from '../components/NightOverlay';
+import { SpaceBackground } from '../components/SpaceBackground';
 import { useTimeoutManager } from '../utils/timeoutManager';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
@@ -165,6 +166,7 @@ export function GameScreen({
       ]}
       edges={['top', 'bottom', 'left', 'right']}
     >
+      <SpaceBackground />
       <ScrollView
         contentContainerStyle={[
           styles.gameScrollContent,
@@ -708,7 +710,7 @@ export function GameScreen({
               value={newName}
               onChangeText={setNewName}
               placeholder={gameState.customName || character.name}
-              placeholderTextColor={isDarkMode ? '#999' : '#666'}
+              placeholderTextColor="#8B8FC7"
               autoFocus
               maxLength={20}
               accessibilityLabel="Character name input"
@@ -750,19 +752,21 @@ const renameModalStyles = StyleSheet.create({
     padding: scale(20),
   },
   modal: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#141832',
     borderRadius: moderateScale(20),
     padding: scale(24),
     width: '90%',
     maxWidth: scale(400),
-    shadowColor: '#000',
+    borderWidth: 1,
+    borderColor: '#2A2F5A',
+    shadowColor: '#7B68EE',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.2,
     shadowRadius: 3.84,
     elevation: 5,
   },
   darkModal: {
-    backgroundColor: '#2C2C2E',
+    backgroundColor: '#141832',
   },
   tabletModal: {
     padding: scale(32),
@@ -770,30 +774,30 @@ const renameModalStyles = StyleSheet.create({
   title: {
     fontSize: moderateScale(20),
     fontWeight: '700',
-    color: '#000000',
+    color: '#E0E4FF',
     marginBottom: verticalScale(16),
     textAlign: 'center',
   },
   darkTitle: {
-    color: '#FFFFFF',
+    color: '#E0E4FF',
   },
   tabletTitle: {
     fontSize: moderateScale(24),
   },
   input: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#1A1F3A',
     borderRadius: moderateScale(12),
     padding: scale(12),
     fontSize: moderateScale(16),
-    color: '#000000',
+    color: '#E0E4FF',
     marginBottom: verticalScale(20),
     borderWidth: 2,
-    borderColor: '#E0E0E0',
+    borderColor: '#2A2F5A',
   },
   darkInput: {
-    backgroundColor: '#1A1A1A',
-    color: '#FFFFFF',
-    borderColor: '#333333',
+    backgroundColor: '#1A1F3A',
+    color: '#E0E4FF',
+    borderColor: '#2A2F5A',
   },
   tabletInput: {
     padding: scale(16),
@@ -814,10 +818,10 @@ const renameModalStyles = StyleSheet.create({
     paddingVertical: verticalScale(14),
   },
   cancelButton: {
-    backgroundColor: '#999999',
+    backgroundColor: '#2A2F5A',
   },
   confirmButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#7B68EE',
   },
   buttonText: {
     color: '#FFFFFF',

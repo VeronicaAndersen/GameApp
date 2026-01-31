@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
   },
   sleepZ: {
     position: 'absolute',
-    color: '#6B7280',
+    color: '#8B8FC7',
     fontWeight: 'bold',
   },
 });
