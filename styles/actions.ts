@@ -10,12 +10,12 @@ export const actionStyles = StyleSheet.create({
   },
   actionButton: {
     flex: 1,
-    borderRadius: moderateScale(12),
-    paddingVertical: verticalScale(10),
-    paddingHorizontal: scale(8),
+    borderRadius: moderateScale(10),
+    paddingVertical: verticalScale(6),
+    paddingHorizontal: scale(4),
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: scale(80),
+    minWidth: scale(60),
     shadowColor: '#7B68EE',
     shadowOffset: {
       width: 0,
@@ -31,24 +31,24 @@ export const actionStyles = StyleSheet.create({
     elevation: 0,
   },
   actionEmoji: {
-    fontSize: moderateScale(32),
-    marginBottom: verticalScale(4),
+    fontSize: moderateScale(24),
+    marginBottom: verticalScale(2),
   },
   actionButtonText: {
     color: '#FFFFFF',
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(12),
     fontWeight: 'bold',
   },
   actionRowContainer: {
-    gap: scale(12),
+    gap: scale(8),
   },
   actionRow: {
     flexDirection: 'row' as const,
-    gap: scale(12),
+    gap: scale(8),
   },
   actionRowCenter: {
     flexDirection: 'row' as const,
-    gap: scale(12),
+    gap: scale(8),
     justifyContent: 'center' as const,
   },
   actionButtonEat: {

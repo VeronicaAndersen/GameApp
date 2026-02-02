@@ -4,8 +4,8 @@ import { scale, verticalScale, moderateScale } from '../utils/responsive';
 export const gameScreenStyles = StyleSheet.create({
   gameScrollContent: {
     flexGrow: 1,
-    paddingHorizontal: scale(20),
-    paddingVertical: verticalScale(20),
+    paddingHorizontal: scale(12),
+    paddingVertical: verticalScale(8),
   },
   gameContent: {
     flex: 1,
@@ -17,14 +17,14 @@ export const gameScreenStyles = StyleSheet.create({
     maxWidth: 600,
   },
   gameHeader: {
-    marginBottom: verticalScale(24),
+    marginBottom: verticalScale(8),
     alignItems: 'center',
   },
   gameTitle: {
-    fontSize: moderateScale(28),
+    fontSize: moderateScale(24),
     fontWeight: 'bold',
     color: '#E0E4FF',
-    marginBottom: verticalScale(8),
+    marginBottom: verticalScale(4),
     textAlign: 'center',
   },
   headerRow: {
@@ -32,9 +32,9 @@ export const gameScreenStyles = StyleSheet.create({
     alignItems: 'center' as const,
   },
   backButton: {
-    marginTop: verticalScale(12),
-    paddingVertical: verticalScale(12),
-    paddingHorizontal: scale(24),
+    marginTop: verticalScale(4),
+    paddingVertical: verticalScale(8),
+    paddingHorizontal: scale(16),
     backgroundColor: '#141832',
     borderRadius: moderateScale(8),
     borderWidth: 1,
@@ -59,7 +59,7 @@ export const gameScreenStyles = StyleSheet.create({
   },
   characterDisplay: {
     alignItems: 'center',
-    marginBottom: verticalScale(20),
+    marginBottom: verticalScale(8),
   },
   characterDisplayContainer: {
     alignItems: 'center',

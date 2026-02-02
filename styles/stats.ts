@@ -2,29 +2,25 @@ import { StyleSheet } from 'react-native';
 import { verticalScale, moderateScale } from '../utils/responsive';
 
 export const statsStyles = StyleSheet.create({
-  statsContainer: {
-    marginBottom: verticalScale(20),
-    gap: verticalScale(16),
-  },
   levelContainer: {
-    marginBottom: verticalScale(12),
+    marginBottom: verticalScale(4),
   },
   levelText: {
-    fontSize: moderateScale(24),
+    fontSize: moderateScale(20),
     fontWeight: 'bold',
     color: '#E0E4FF',
-    marginBottom: verticalScale(8),
+    marginBottom: verticalScale(4),
     textAlign: 'center',
   },
   wideLevelText: {
     fontSize: moderateScale(32),
   },
   xpBarContainer: {
-    height: verticalScale(20),
+    height: verticalScale(14),
     backgroundColor: '#1E2248',
-    borderRadius: moderateScale(10),
+    borderRadius: moderateScale(7),
     overflow: 'hidden',
-    marginBottom: verticalScale(8),
+    marginBottom: verticalScale(4),
   },
   xpBar: {
     height: '100%',
@@ -36,24 +32,24 @@ export const statsStyles = StyleSheet.create({
     textAlign: 'center',
   },
   statRow: {
-    gap: verticalScale(12),
+    gap: verticalScale(6),
   },
   statItem: {
     flex: 1,
-    marginBottom: verticalScale(4),
+    marginBottom: verticalScale(2),
   },
   statLabel: {
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(12),
     color: '#8B8FC7',
-    marginBottom: verticalScale(4),
+    marginBottom: verticalScale(2),
     fontWeight: '600',
   },
   statBarContainer: {
-    height: verticalScale(12),
+    height: verticalScale(10),
     backgroundColor: '#1E2248',
-    borderRadius: moderateScale(6),
+    borderRadius: moderateScale(5),
     overflow: 'hidden',
-    marginBottom: verticalScale(2),
+    marginBottom: verticalScale(1),
   },
   statBar: {
     height: '100%',

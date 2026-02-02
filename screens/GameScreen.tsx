@@ -212,7 +212,7 @@ export function GameScreen({
   const statsSection = (
     <View
       nativeID="stats-section"
-      style={[styles.statsContainer, isWideScreen && styles.wideStatsContainer]}
+      style={[isWideScreen && styles.wideStatsContainer]}
       accessibilityRole="summary"
       accessibilityLabel={`Character stats: Level ${gameState.level}, ${gameState.experience % XP_PER_LEVEL} of ${XP_PER_LEVEL} experience points, ${Math.round(gameState.hunger)}% hunger, ${Math.round(gameState.happiness)}% happiness, ${Math.round(gameState.energy)}% energy, ${Math.round(gameState.health)}% health`}
     >
@@ -336,18 +336,14 @@ export function GameScreen({
         </View>
       ) : (
         // Phone: scrollable vertical layout
-        <ScrollView
-          nativeID="game-scroll"
-          contentContainerStyle={styles.gameScrollContent}
-          showsVerticalScrollIndicator={false}
-        >
+     
           <View nativeID="game-content" style={[styles.gameContent, styles.phoneGameContent]}>
             {headerSection}
             {characterDisplaySection}
             {statsSection}
             {actionsSection}
           </View>
-        </ScrollView>
+
       )}
 
       <PoopDisplay poopCount={tamagotchi.poop.poopCount} isWideScreen={isWideScreen} />
