@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { moderateScale, verticalScale } from '../utils/responsive';
+import { moderateScale } from '../utils/responsive';
 
 interface PoopDisplayProps {
   poopCount: number;
@@ -11,22 +11,19 @@ interface PoopDisplayProps {
  * Displays poop emojis around the character based on poopCount
  */
 export const PoopDisplay: React.FC<PoopDisplayProps> = ({ poopCount, isWideScreen }) => {
-  // Generate positions for poop emojis
+  // Generate random positions scattered across the screen
   const poopPositions = useMemo(() => {
-    const positions: { left: number; bottom: number }[] = [];
-    const baseSpread = isWideScreen ? 200 : 120;
+    const positions: { leftPercent: number; bottomPercent: number }[] = [];
 
     for (let i = 0; i < poopCount; i++) {
-      // Spread poops across the bottom area
-      const angle = (i / Math.max(poopCount, 1)) * Math.PI + Math.PI * 0.1;
-      const radius = baseSpread * (0.5 + Math.random() * 0.5);
       positions.push({
-        left: Math.cos(angle) * radius,
-        bottom: Math.sin(angle) * 20 + Math.random() * 10,
+        leftPercent: 10 + Math.random() * 80, // 10%-90% from left
+        bottomPercent: 5 + Math.random() * 50, // 5%-55% from bottom
       });
     }
     return positions;
-  }, [poopCount, isWideScreen]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poopCount]);
 
   if (poopCount === 0) return null;
 
@@ -39,7 +36,7 @@ export const PoopDisplay: React.FC<PoopDisplayProps> = ({ poopCount, isWideScree
             styles.poop,
             isWideScreen && styles.poopWide,
             // eslint-disable-next-line react-native/no-inline-styles
-            { left: '50%', marginLeft: pos.left, bottom: pos.bottom },
+            { left: `${pos.leftPercent}%`, bottom: `${pos.bottomPercent}%` },
           ]}
         >
           💩
@@ -55,8 +52,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: verticalScale(60),
-    alignItems: 'center',
+    top: 0,
+    zIndex: 100,
   },
   poop: {
     position: 'absolute',

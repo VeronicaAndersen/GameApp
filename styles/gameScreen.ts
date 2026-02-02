@@ -112,7 +112,7 @@ export const gameScreenStyles = StyleSheet.create({
     justifyContent: 'center' as const,
   },
   wideRightColumn: {
-    flex: 4,
+    flex: 1,
     justifyContent: 'center' as const,
   },
   wideGameHeader: {

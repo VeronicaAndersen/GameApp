@@ -1,9 +1,12 @@
 /* eslint-disable no-console */
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { GameState, CharacterType } from '../types';
+import { GameState, CharacterType, isCharacterType } from '../types';
 import { INITIAL_STATE } from '../constants';
 import { getCharacterProgress, updateCharacterProgress } from '../utils/storage';
 import { validateCharacterProgress, sanitizeCharacterProgress } from '../utils/validation';
+import { PlatformStorage } from '../utils/platformStorage';
+
+const LAST_CHARACTER_KEY = '@game_last_character';
 
 export interface UsePersistentGameStateReturn {
   gameState: GameState;
@@ -21,7 +24,7 @@ export function usePersistentGameState(): UsePersistentGameStateReturn {
   const [gameState, setGameState] = useState<GameState>(INITIAL_STATE);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const saveTimeoutRef = useRef<NodeJS.Timeout>();
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   /**
    * Loads progress for a specific character from storage
@@ -83,9 +86,32 @@ export function usePersistentGameState(): UsePersistentGameStateReturn {
   const selectCharacter = useCallback(
     async (type: CharacterType): Promise<void> => {
       await loadCharacterData(type);
+      await PlatformStorage.setItem(LAST_CHARACTER_KEY, type);
     },
     [loadCharacterData]
   );
+
+  // On mount, restore the last selected character
+  useEffect(() => {
+    (async () => {
+      try {
+        const lastCharacter = await PlatformStorage.getItem(LAST_CHARACTER_KEY);
+        if (lastCharacter && isCharacterType(lastCharacter)) {
+          await loadCharacterData(lastCharacter);
+        }
+      } catch (err) {
+        console.error('Failed to restore last character:', err);
+      }
+    })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Clear last character when user returns to character selection
+  useEffect(() => {
+    if (gameState.character === null) {
+      PlatformStorage.removeItem(LAST_CHARACTER_KEY).catch(() => {});
+    }
+  }, [gameState.character]);
 
   /**
    * Auto-save with debouncing and error handling

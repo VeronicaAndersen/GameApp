@@ -196,7 +196,6 @@ export function GameScreen({
           <SickIndicator isSick={tamagotchi.health.isSick} sickReason={tamagotchi.health.sickReason} />
           <NightOverlay visible={lightsOff} />
         </View>
-        <PoopDisplay poopCount={tamagotchi.poop.poopCount} isWideScreen={isWideScreen} />
         <Animated.View
           style={[
             styles.levelUpBadge,
@@ -350,6 +349,8 @@ export function GameScreen({
           </View>
         </ScrollView>
       )}
+
+      <PoopDisplay poopCount={tamagotchi.poop.poopCount} isWideScreen={isWideScreen} />
 
       <EventNotification event={currentEvent} onDismiss={dismissEvent} isWideScreen={isWideScreen} />
 

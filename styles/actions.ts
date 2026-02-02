@@ -11,10 +11,11 @@ export const actionStyles = StyleSheet.create({
   actionButton: {
     flex: 1,
     borderRadius: moderateScale(12),
-    paddingVertical: verticalScale(14),
+    paddingVertical: verticalScale(10),
+    paddingHorizontal: scale(8),
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: scale(100),
+    minWidth: scale(80),
     shadowColor: '#7B68EE',
     shadowOffset: {
       width: 0,
@@ -70,5 +71,7 @@ export const actionStyles = StyleSheet.create({
   },
   actionButtonClean: {
     backgroundColor: '#8B4513',
+    flex: undefined,
+    width: '31%',
   },
 });
