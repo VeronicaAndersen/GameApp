@@ -39,6 +39,7 @@ export const statsStyles = StyleSheet.create({
     gap: verticalScale(12),
   },
   statItem: {
+    flex: 1,
     marginBottom: verticalScale(4),
   },
   statLabel: {

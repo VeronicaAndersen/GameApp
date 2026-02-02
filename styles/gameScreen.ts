@@ -109,4 +109,46 @@ export const gameScreenStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: moderateScale(16),
   },
+  // Tablet two-column layout
+  tabletGameContent: {
+    maxWidth: undefined,
+  },
+  tabletBody: {
+    flexDirection: 'row' as const,
+    gap: scale(24),
+    flex: 1,
+  },
+  tabletLeftColumn: {
+    flex: 1,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+  tabletRightColumn: {
+    flex: 1,
+    justifyContent: 'center' as const,
+  },
+  tabletGameHeader: {
+    marginBottom: verticalScale(8),
+  },
+  tabletCharacterDisplay: {
+    marginBottom: verticalScale(8),
+  },
+  tabletStatsContainer: {
+    marginBottom: verticalScale(12),
+    gap: verticalScale(8),
+  },
+  tabletLevelContainer: {
+    marginBottom: verticalScale(6),
+  },
+  tabletStatRow: {
+    flexDirection: 'row' as const,
+    gap: scale(12),
+  },
+  tabletStatItem: {
+    flex: 1,
+    marginBottom: 0,
+  },
+  tabletActionRowContainer: {
+    gap: scale(8),
+  },
 });

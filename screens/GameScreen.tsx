@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, Animated, Dimensions } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CharacterIcon } from '../components/CharacterIcon';
 import { GameState, Dimensions as ScreenDimensions } from '../types';
@@ -40,8 +40,7 @@ export function GameScreen({
   gameState,
   setGameState,
 }: GameScreenProps): React.JSX.Element {
-  const windowHeight = Dimensions.get('window').height; // Dynamically calculate height
-  const isTablet = dimensions.width >= 768;
+  const isWideScreen = dimensions.width >= 768;
   const character = CHARACTERS.find((c) => c.type === gameState.character);
 
   const [showRenameModal, setShowRenameModal] = useState(false);
@@ -153,236 +152,204 @@ export function GameScreen({
     return <></>;
   }
 
+  // Character display section
+  const characterDisplaySection = (
+    <View style={[styles.characterDisplay, isWideScreen && styles.tabletCharacterDisplay]}>
+      <Animated.View
+        style={[
+          styles.characterDisplayContainer,
+          {
+            transform: [
+              { scale: Animated.multiply(bounceAnim, characterScale).interpolate({
+                inputRange: [0, 10],
+                outputRange: [0, 10 * tamagotchi.lifeStage.stageConfig.scale],
+              }) },
+              { rotate: characterRotate.interpolate({
+                inputRange: [-360, 360],
+                outputRange: ['-360deg', '360deg'],
+              }) }
+            ]
+          },
+        ]}
+      >
+        <View
+          style={[
+            styles.characterDisplayEmoji,
+            { backgroundColor: character.color + '20' },
+            isWideScreen && styles.tabletCharacterDisplayEmoji,
+            (character.type === 'lizard' || character.type === 'cat') && styles.lizardDisplayContainer,
+            lightsOff && { backgroundColor: character.color + '10' },
+          ]}
+        >
+          <CharacterIcon
+            characterType={character.type}
+            size={moderateScale(60)}
+            containerSize={isWideScreen ? scale(160) : scale(120)}
+            lifeStage={tamagotchi.lifeStage.currentStage}
+            isSick={tamagotchi.health.isSick}
+            isDead={tamagotchi.health.isDead}
+            isSleeping={lightsOff}
+            mood={characterMood}
+          />
+          <SnoringAnimation visible={isSnoring} />
+          <ActionEmojis visible={showActionEmojis} actionType={currentActionType} />
+          <SickIndicator isSick={tamagotchi.health.isSick} sickReason={tamagotchi.health.sickReason} />
+          <NightOverlay visible={lightsOff} />
+        </View>
+        <PoopDisplay poopCount={tamagotchi.poop.poopCount} isTablet={isWideScreen} />
+        <Animated.View
+          style={[
+            styles.levelUpBadge,
+            { opacity: levelUpAnim, transform: [{ scale: levelUpAnim.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1.2] }) }] },
+          ]}
+        >
+          <Text style={styles.levelUpText}>LEVEL UP! ⭐</Text>
+        </Animated.View>
+      </Animated.View>
+    </View>
+  );
+
+  // Stats section
+  const statsSection = (
+    <View
+      style={[styles.statsContainer, isWideScreen && styles.tabletStatsContainer]}
+      accessibilityRole="summary"
+      accessibilityLabel={`Character stats: Level ${gameState.level}, ${gameState.experience % XP_PER_LEVEL} of ${XP_PER_LEVEL} experience points, ${Math.round(gameState.hunger)}% hunger, ${Math.round(gameState.happiness)}% happiness, ${Math.round(gameState.energy)}% energy, ${Math.round(gameState.health)}% health`}
+    >
+      <View style={[styles.levelContainer, isWideScreen && styles.tabletLevelContainer]}>
+        <Text style={[styles.levelText, isWideScreen && styles.tabletLevelText]} accessibilityRole="text">
+          Level {gameState.level}
+        </Text>
+        <View style={styles.xpBarContainer}>
+          <View style={[styles.xpBar, { width: `${xpProgress * 100}%`, backgroundColor: character.color }]} />
+        </View>
+        <Text style={styles.xpText}>{gameState.experience % XP_PER_LEVEL} / {XP_PER_LEVEL} XP</Text>
+      </View>
+      <View style={[styles.statRow, isWideScreen && styles.tabletStatRow]}>
+        <StatBar label="Hunger" value={gameState.hunger} maxValue={MAX_HUNGER} barColor="#FF6B6B" />
+        <StatBar label="Glädje" value={gameState.happiness} maxValue={MAX_HAPPINESS} barColor="#4FC3F7" />
+      </View>
+      <View style={[styles.statRow, isWideScreen && styles.tabletStatRow]}>
+        <StatBar label="Energi" value={gameState.energy} maxValue={MAX_ENERGY} barColor="#FFD93D" />
+        <StatBar label="Hälsa" value={gameState.health} maxValue={MAX_HEALTH} barColor="#69F0AE" />
+      </View>
+    </View>
+  );
+
+  // Actions section
+  const actionsSection = (
+    <View style={[styles.actionRowContainer, isWideScreen && styles.tabletActionRowContainer]}>
+      <View style={styles.actionRow}>
+        <ActionButton emoji="🍕" label="Mat" colorStyle={styles.actionButtonEat}
+          onPress={handleEatWithAnimation} disabled={gameState.hunger >= MAX_HUNGER}
+          accessibilityLabel={`Feed ${displayName}`} accessibilityHint="Increase hunger by 20 points, decrease energy by 5, and gain 10 experience" />
+        <ActionButton emoji="🎮" label="Lek" colorStyle={styles.actionButtonPlay}
+          onPress={handlePlayWithAnimation} disabled={gameState.happiness >= MAX_HAPPINESS}
+          accessibilityLabel={`Play with ${character.name}`} accessibilityHint="Increase happiness by 20 points, decrease energy by 10 and hunger by 5, and gain 15 experience" />
+        <ActionButton emoji="😴" label="Sov" colorStyle={styles.actionButtonSleep}
+          onPress={handleSleepWithAnimation} disabled={gameState.energy >= MAX_ENERGY}
+          accessibilityLabel={`Let ${character.name} sleep`} accessibilityHint="Increase energy by 30 points, decrease hunger by 10, and gain 5 experience" />
+      </View>
+      <View style={styles.actionRow}>
+        <ActionButton emoji="🏃" label="Träna" colorStyle={styles.actionButtonExercise}
+          onPress={handleExerciseWithAnimation} disabled={gameState.energy < 20}
+          accessibilityLabel={`Exercise with ${character.name}`} accessibilityHint="Increase health by 15 and happiness by 10, decrease energy by 20 and hunger by 15, and gain 20 experience" />
+        <ActionButton emoji="❤️" label="Klappa" colorStyle={styles.actionButtonPet}
+          onPress={handlePetWithAnimation} disabled={gameState.happiness >= MAX_HAPPINESS}
+          accessibilityLabel={`Pet ${character.name}`} accessibilityHint="Increase happiness by 15 and health by 5, and gain 8 experience" />
+        <ActionButton emoji="💊" label="Medicin" colorStyle={styles.actionButtonMedicine}
+          onPress={handleMedicineWithAnimation} disabled={gameState.health >= MAX_HEALTH}
+          accessibilityLabel={`Give ${character.name} medicine`} accessibilityHint="Increase health by 30 points, decrease happiness by 10, and gain 5 experience" />
+      </View>
+      <View style={styles.actionRowCenter}>
+        <ActionButton emoji="🧹" label={`Städa ${gameState.poopCount > 0 ? `(${gameState.poopCount})` : ''}`} colorStyle={styles.actionButtonClean}
+          onPress={handleCleanWithAnimation} disabled={gameState.poopCount === 0}
+          accessibilityLabel={`Clean up after ${displayName}`} accessibilityHint="Remove all poop and gain 5 experience" />
+      </View>
+    </View>
+  );
+
+  // Header section
+  const headerSection = (
+    <View style={[styles.gameHeader, isWideScreen && styles.tabletGameHeader]}>
+      <View style={[styles.headerRow, { gap: scale(12) }]}>
+        <TouchableOpacity
+          onPress={() => setShowRenameModal(true)}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Rename character"
+          accessibilityHint="Tap to give your character a custom name"
+        >
+          <Text style={styles.gameTitle}>
+            {displayName} ✏️🤬
+          </Text>
+        </TouchableOpacity>
+        <LifeStageIndicator
+          stage={tamagotchi.lifeStage.currentStage}
+          stageConfig={tamagotchi.lifeStage.stageConfig}
+          ageDisplay={tamagotchi.lifeStage.ageDisplay}
+        />
+      </View>
+      <View style={[styles.headerRow, { gap: scale(12) }]}>
+        <LightsToggle
+          lightsOn={tamagotchi.sleep.lightsOn}
+          isNightTime={tamagotchi.sleep.isNightTime}
+          onToggle={tamagotchi.sleep.toggleLights}
+        />
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => setGameState(INITIAL_STATE)}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Change character"
+          accessibilityHint="Return to character selection screen to choose a different character"
+        >
+          <Text style={styles.backButtonText}>Byt karaktär</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
   return (
     <SafeAreaView
-      style={{
-        maxHeight: windowHeight,
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-        ...styles.container,
-        ...(lightsOff ? styles.lightsOffContainer : styles.lightsOnContainer),
-      }}
+      style={[
+        styles.container,
+        lightsOff ? styles.lightsOffContainer : styles.lightsOnContainer,
+      ]}
       edges={['top', 'bottom', 'left', 'right']}
     >
       <SpaceBackground />
-      <ScrollView
-        contentContainerStyle={styles.gameScrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.gameContent}>
-          {/* Header */}
-          <View style={styles.gameHeader}>
-            <View style={[styles.headerRow, { gap: scale(12) }]}>
-              <TouchableOpacity
-                onPress={() => setShowRenameModal(true)}
-                activeOpacity={0.7}
-                accessibilityRole="button"
-                accessibilityLabel="Rename character"
-                accessibilityHint="Tap to give your character a custom name"
-              >
-                <Text
-                  style={[
-                    styles.gameTitle,
-                    isTablet && styles.tabletTitle,
-                  ]}
-                >
-                  {displayName} ✏️🤬
-                </Text>
-              </TouchableOpacity>
-              <LifeStageIndicator
-                stage={tamagotchi.lifeStage.currentStage}
-                stageConfig={tamagotchi.lifeStage.stageConfig}
-                ageDisplay={tamagotchi.lifeStage.ageDisplay}
-              />
+      {isWideScreen ? (
+        // Tablet: two-column layout, no scrolling
+        <View style={[styles.gameContent, styles.tabletGameContent, { paddingHorizontal: scale(24), paddingVertical: scale(8) }]}>
+          {headerSection}
+          <View style={styles.tabletBody}>
+            <View style={styles.tabletLeftColumn}>
+              {characterDisplaySection}
             </View>
-            <View style={[styles.headerRow, { gap: scale(12) }]}>
-              <LightsToggle
-                lightsOn={tamagotchi.sleep.lightsOn}
-                isNightTime={tamagotchi.sleep.isNightTime}
-                onToggle={tamagotchi.sleep.toggleLights}
-              />
-              <TouchableOpacity
-                style={[
-                  styles.backButton,
-                  isTablet && styles.tabletBackButton,
-                ]}
-                onPress={() => setGameState(INITIAL_STATE)}
-                activeOpacity={0.7}
-                accessibilityRole="button"
-                accessibilityLabel="Change character"
-                accessibilityHint="Return to character selection screen to choose a different character"
-              >
-                <Text style={[
-                  styles.backButtonText,
-                  isTablet && styles.tabletBackButtonText,
-                ]}>
-                  Byt karaktär
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* Character Display */}
-          <View style={styles.characterDisplay}>
-            <Animated.View
-              style={[
-                styles.characterDisplayContainer,
-                {
-                  transform: [
-                    { scale: Animated.multiply(bounceAnim, characterScale).interpolate({
-                      inputRange: [0, 10],
-                      outputRange: [0, 10 * tamagotchi.lifeStage.stageConfig.scale],
-                    }) },
-                    {
-                      rotate: characterRotate.interpolate({
-                        inputRange: [-360, 360],
-                        outputRange: ['-360deg', '360deg'],
-                      })
-                    }
-                  ]
-                },
-              ]}
-            >
-              <View
-                style={[
-                  styles.characterDisplayEmoji,
-                  { backgroundColor: character.color + '20' },
-                  isTablet && styles.tabletCharacterDisplayEmoji,
-                  (character.type === 'lizard' || character.type === 'cat') && styles.lizardDisplayContainer,
-                  lightsOff && { backgroundColor: character.color + '10' },
-                ]}
-              >
-                <CharacterIcon
-                  characterType={character.type}
-                  size={moderateScale(60)}
-                  containerSize={isTablet ? scale(200) : scale(120)}
-                  lifeStage={tamagotchi.lifeStage.currentStage}
-                  isSick={tamagotchi.health.isSick}
-                  isDead={tamagotchi.health.isDead}
-                  isSleeping={lightsOff}
-                  mood={characterMood}
-                />
-                {/* Snoring Animation */}
-                <SnoringAnimation visible={isSnoring} />
-                {/* Action Emojis */}
-                <ActionEmojis visible={showActionEmojis} actionType={currentActionType} />
-                {/* Sick Indicator */}
-                <SickIndicator
-                  isSick={tamagotchi.health.isSick}
-                  sickReason={tamagotchi.health.sickReason}
-                />
-                <NightOverlay visible={lightsOff} />
-              </View>
-              {/* Poop Display */}
-              <PoopDisplay poopCount={tamagotchi.poop.poopCount} isTablet={isTablet} />
-              <Animated.View
-                style={[
-                  styles.levelUpBadge,
-                  {
-                    opacity: levelUpAnim,
-                    transform: [
-                      {
-                        scale: levelUpAnim.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0.8, 1.2],
-                        }),
-                      },
-                    ],
-                  },
-                ]}
-              >
-                <Text style={styles.levelUpText}>LEVEL UP! ⭐</Text>
-              </Animated.View>
-            </Animated.View>
-          </View>
-
-          {/* Stats */}
-          <View
-            style={styles.statsContainer}
-            accessibilityRole="summary"
-            accessibilityLabel={`Character stats: Level ${gameState.level}, ${gameState.experience % XP_PER_LEVEL} of ${XP_PER_LEVEL} experience points, ${Math.round(gameState.hunger)}% hunger, ${Math.round(gameState.happiness)}% happiness, ${Math.round(gameState.energy)}% energy, ${Math.round(gameState.health)}% health`}
-          >
-            <View style={styles.levelContainer}>
-              <Text
-                style={[
-                  styles.levelText,
-                  isTablet && styles.tabletLevelText,
-                ]}
-                accessibilityRole="text"
-              >
-                Level {gameState.level}
-              </Text>
-              <View
-                style={styles.xpBarContainer}
-              >
-                <View
-                  style={[
-                    styles.xpBar,
-                    { width: `${xpProgress * 100}%`, backgroundColor: character.color },
-                  ]}
-                />
-              </View>
-              <Text
-                style={styles.xpText}
-              >
-                {gameState.experience % XP_PER_LEVEL} / {XP_PER_LEVEL} XP
-              </Text>
-            </View>
-
-            <View style={styles.statRow}>
-              <StatBar label="Hunger" value={gameState.hunger} maxValue={MAX_HUNGER} barColor="#FF6B6B" />
-              <StatBar label="Glädje" value={gameState.happiness} maxValue={MAX_HAPPINESS} barColor="#4FC3F7" />
-            </View>
-
-            <View style={styles.statRow}>
-              <StatBar label="Energi" value={gameState.energy} maxValue={MAX_ENERGY} barColor="#FFD93D" />
-              <StatBar label="Hälsa" value={gameState.health} maxValue={MAX_HEALTH} barColor="#69F0AE" />
-            </View>
-          </View>
-
-          {/* Actions */}
-          <View style={styles.actionRowContainer}>
-            <View style={styles.actionRow}>
-              <ActionButton emoji="🍕" label="Mat" colorStyle={styles.actionButtonEat}
-                onPress={handleEatWithAnimation} disabled={gameState.hunger >= MAX_HUNGER}
-                accessibilityLabel={`Feed ${displayName}`} accessibilityHint="Increase hunger by 20 points, decrease energy by 5, and gain 10 experience" />
-              <ActionButton emoji="🎮" label="Lek" colorStyle={styles.actionButtonPlay}
-                onPress={handlePlayWithAnimation} disabled={gameState.happiness >= MAX_HAPPINESS} 
-                accessibilityLabel={`Play with ${character.name}`} accessibilityHint="Increase happiness by 20 points, decrease energy by 10 and hunger by 5, and gain 15 experience" />
-              <ActionButton emoji="😴" label="Sov" colorStyle={styles.actionButtonSleep}
-                onPress={handleSleepWithAnimation} disabled={gameState.energy >= MAX_ENERGY} 
-                accessibilityLabel={`Let ${character.name} sleep`} accessibilityHint="Increase energy by 30 points, decrease hunger by 10, and gain 5 experience" />
-            </View>
-
-            <View style={styles.actionRow}>
-              <ActionButton emoji="🏃" label="Träna" colorStyle={styles.actionButtonExercise}
-                onPress={handleExerciseWithAnimation} disabled={gameState.energy < 20} 
-                accessibilityLabel={`Exercise with ${character.name}`} accessibilityHint="Increase health by 15 and happiness by 10, decrease energy by 20 and hunger by 15, and gain 20 experience" />
-              <ActionButton emoji="❤️" label="Klappa" colorStyle={styles.actionButtonPet}
-                onPress={handlePetWithAnimation} disabled={gameState.happiness >= MAX_HAPPINESS} 
-                accessibilityLabel={`Pet ${character.name}`} accessibilityHint="Increase happiness by 15 and health by 5, and gain 8 experience" />
-              <ActionButton emoji="💊" label="Medicin" colorStyle={styles.actionButtonMedicine}
-                onPress={handleMedicineWithAnimation} disabled={gameState.health >= MAX_HEALTH} 
-                accessibilityLabel={`Give ${character.name} medicine`} accessibilityHint="Increase health by 30 points, decrease happiness by 10, and gain 5 experience" />
-            </View>
-
-            <View style={styles.actionRowCenter}>
-              <ActionButton emoji="🧹" label={`Städa ${gameState.poopCount > 0 ? `(${gameState.poopCount})` : ''}`} colorStyle={styles.actionButtonClean}
-                onPress={handleCleanWithAnimation} disabled={gameState.poopCount === 0} 
-                accessibilityLabel={`Clean up after ${displayName}`} accessibilityHint="Remove all poop and gain 5 experience" />
+            <View style={styles.tabletRightColumn}>
+              {statsSection}
+              {actionsSection}
             </View>
           </View>
         </View>
-      </ScrollView>
+      ) : (
+        // Phone: scrollable vertical layout
+        <ScrollView
+          contentContainerStyle={styles.gameScrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.gameContent}>
+            {headerSection}
+            {characterDisplaySection}
+            {statsSection}
+            {actionsSection}
+          </View>
+        </ScrollView>
+      )}
 
-      {/* Random Event Notification */}
-      <EventNotification
-        event={currentEvent}
-        onDismiss={dismissEvent}
-        isTablet={isTablet}
-      />
+      <EventNotification event={currentEvent} onDismiss={dismissEvent} isTablet={isWideScreen} />
 
-      {/* Death Screen */}
       <DeathScreen
         visible={tamagotchi.health.isDead}
         characterName={displayName}
@@ -392,7 +359,6 @@ export function GameScreen({
         onNewPet={() => setGameState(INITIAL_STATE)}
       />
 
-      {/* Rename Modal */}
       <RenameModal
         visible={showRenameModal}
         currentName={gameState.customName || ''}
@@ -403,7 +369,7 @@ export function GameScreen({
           playHappyAnimation();
         }}
         onClose={() => setShowRenameModal(false)}
-        isTablet={isTablet}
+        isTablet={isWideScreen}
       />
     </SafeAreaView>
   );
