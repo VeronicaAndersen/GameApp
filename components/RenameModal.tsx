@@ -40,12 +40,13 @@ export const RenameModal = React.memo<RenameModalProps>(({
       animationType="fade"
       onRequestClose={handleClose}
     >
-      <View style={modalStyles.overlay}>
-        <View style={[modalStyles.modal, isTablet && modalStyles.tabletModal]}>
+      <View nativeID="rename-modal-overlay" style={modalStyles.overlay}>
+        <View nativeID="rename-modal" style={[modalStyles.modal, isTablet && modalStyles.tabletModal]}>
           <Text style={[modalStyles.title, isTablet && modalStyles.tabletTitle]}>
             Ge {characterName} ett nytt namn
           </Text>
           <TextInput
+            nativeID="rename-input"
             style={[modalStyles.input, isTablet && modalStyles.tabletInput]}
             value={newName}
             onChangeText={setNewName}
@@ -56,7 +57,7 @@ export const RenameModal = React.memo<RenameModalProps>(({
             accessibilityLabel="Character name input"
             accessibilityHint="Enter a custom name for your character"
           />
-          <View style={modalStyles.buttons}>
+          <View nativeID="rename-modal-buttons" style={modalStyles.buttons}>
             <TouchableOpacity
               style={[modalStyles.button, modalStyles.cancelButton, isTablet && modalStyles.tabletButton]}
               onPress={handleClose}

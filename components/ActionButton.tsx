@@ -20,26 +20,30 @@ export const ActionButton = React.memo<ActionButtonProps>(({
   disabled,
   accessibilityLabel,
   accessibilityHint,
-}) => (
-  <TouchableOpacity
-    style={[
-      styles.actionButton,
-      colorStyle,
-      disabled && styles.disabledActionButton,
-    ]}
-    onPress={onPress}
-    activeOpacity={0.8}
-    disabled={disabled}
-    accessibilityRole="button"
-    accessibilityLabel={accessibilityLabel}
-    accessibilityHint={accessibilityHint}
-    accessibilityState={{ disabled }}
-  >
-    <Text style={styles.actionEmoji}>{emoji}</Text>
-    <Text style={styles.actionButtonText}>
-      {label}
-    </Text>
-  </TouchableOpacity>
-));
+}) => {
+  const buttonId = `action-${label.toLowerCase().replace(/[^a-z]/g, '')}`;
+  return (
+    <TouchableOpacity
+      testID={buttonId}
+      style={[
+        styles.actionButton,
+        colorStyle,
+        disabled && styles.disabledActionButton,
+      ]}
+      onPress={onPress}
+      activeOpacity={0.8}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
+      accessibilityState={{ disabled }}
+    >
+      <Text style={styles.actionEmoji}>{emoji}</Text>
+      <Text style={styles.actionButtonText}>
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+});
 
 ActionButton.displayName = 'ActionButton';

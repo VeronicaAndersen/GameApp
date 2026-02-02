@@ -127,7 +127,7 @@ export const SpaceBackground: React.FC = () => {
   });
 
   return (
-    <View style={styles.container} pointerEvents="none">
+    <View nativeID="space-background" style={styles.container} pointerEvents="none">
       {/* Stars */}
       <Animated.Text style={[styles.star, styles.star1, { opacity: twinkleAnim }]}>
         ✦

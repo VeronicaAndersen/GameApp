@@ -154,7 +154,7 @@ export function GameScreen({
 
   // Character display section
   const characterDisplaySection = (
-    <View style={[styles.characterDisplay, isWideScreen && styles.tabletCharacterDisplay]}>
+    <View nativeID="character-display" style={[styles.characterDisplay, isWideScreen && styles.tabletCharacterDisplay]}>
       <Animated.View
         style={[
           styles.characterDisplayContainer,
@@ -212,6 +212,7 @@ export function GameScreen({
   // Stats section
   const statsSection = (
     <View
+      nativeID="stats-section"
       style={[styles.statsContainer, isWideScreen && styles.tabletStatsContainer]}
       accessibilityRole="summary"
       accessibilityLabel={`Character stats: Level ${gameState.level}, ${gameState.experience % XP_PER_LEVEL} of ${XP_PER_LEVEL} experience points, ${Math.round(gameState.hunger)}% hunger, ${Math.round(gameState.happiness)}% happiness, ${Math.round(gameState.energy)}% energy, ${Math.round(gameState.health)}% health`}
@@ -238,7 +239,7 @@ export function GameScreen({
 
   // Actions section
   const actionsSection = (
-    <View style={[styles.actionRowContainer, isWideScreen && styles.tabletActionRowContainer]}>
+    <View nativeID="actions-section" style={[styles.actionRowContainer, isWideScreen && styles.tabletActionRowContainer]}>
       <View style={styles.actionRow}>
         <ActionButton emoji="🍕" label="Mat" colorStyle={styles.actionButtonEat}
           onPress={handleEatWithAnimation} disabled={gameState.hunger >= MAX_HUNGER}
@@ -271,7 +272,7 @@ export function GameScreen({
 
   // Header section
   const headerSection = (
-    <View style={[styles.gameHeader, isWideScreen && styles.tabletGameHeader]}>
+    <View nativeID="game-header" style={[styles.gameHeader, isWideScreen && styles.tabletGameHeader]}>
       <View style={[styles.headerRow, { gap: scale(12) }]}>
         <TouchableOpacity
           onPress={() => setShowRenameModal(true)}
@@ -312,6 +313,7 @@ export function GameScreen({
 
   return (
     <SafeAreaView
+      nativeID="game-screen"
       style={[
         styles.container,
         lightsOff ? styles.lightsOffContainer : styles.lightsOnContainer,
@@ -321,13 +323,13 @@ export function GameScreen({
       <SpaceBackground />
       {isWideScreen ? (
         // Tablet: two-column layout, no scrolling
-        <View style={[styles.gameContent, styles.tabletGameContent, { paddingHorizontal: scale(24), paddingVertical: scale(8) }]}>
+        <View nativeID="game-content" style={[styles.gameContent, styles.tabletGameContent, { paddingHorizontal: scale(24), paddingVertical: scale(8) }]}>
           {headerSection}
-          <View style={styles.tabletBody}>
-            <View style={styles.tabletLeftColumn}>
+          <View nativeID="game-body" style={styles.tabletBody}>
+            <View nativeID="game-column-left" style={styles.tabletLeftColumn}>
               {characterDisplaySection}
             </View>
-            <View style={styles.tabletRightColumn}>
+            <View nativeID="game-column-right" style={styles.tabletRightColumn}>
               {statsSection}
               {actionsSection}
             </View>
@@ -336,10 +338,11 @@ export function GameScreen({
       ) : (
         // Phone: scrollable vertical layout
         <ScrollView
+          nativeID="game-scroll"
           contentContainerStyle={styles.gameScrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.gameContent}>
+          <View nativeID="game-content" style={styles.gameContent}>
             {headerSection}
             {characterDisplaySection}
             {statsSection}

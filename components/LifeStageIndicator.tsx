@@ -37,7 +37,7 @@ export const LifeStageIndicator: React.FC<LifeStageIndicatorProps> = ({
   const color = STAGE_COLORS[stage];
 
   return (
-    <View style={styles.container}>
+    <View nativeID="life-stage-indicator" style={styles.container}>
       <View style={[styles.badge, { backgroundColor: color + '40' }]}>
         <Text style={styles.emoji}>{emoji}</Text>
         <Text style={[styles.stageName, { color }]}>{stageConfig.name}</Text>

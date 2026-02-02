@@ -37,8 +37,9 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
       animationType="fade"
       onRequestClose={onDismiss}
     >
-      <View style={styles.overlay}>
+      <View nativeID="event-overlay" style={styles.overlay}>
         <View
+          nativeID="event-card"
           style={[
             styles.eventCard,
             isTablet && styles.tabletEventCard,
@@ -63,7 +64,7 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
           </Text>
 
           {/* Effects display */}
-          <View style={styles.effectsContainer}>
+          <View nativeID="event-effects" style={styles.effectsContainer}>
             {effectEntries.map(([key, value]) => {
               const isPositive = value > 0;
               const statName = statNames[key as keyof typeof statNames];

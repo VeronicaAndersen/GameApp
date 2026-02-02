@@ -18,26 +18,29 @@ export function CharacterSelectionScreen({
 }: CharacterSelectionScreenProps): React.JSX.Element {
   return (
     <SafeAreaView
+      nativeID="selection-screen"
       style={styles.container}
       edges={['top', 'bottom', 'left', 'right']}
     >
       <SpaceBackground />
       <ScrollView
+        nativeID="selection-scroll"
         contentContainerStyle={styles.selectionScrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.selectionContent}>
-          <Text style={styles.selectionTitle}>
+        <View nativeID="selection-content" style={styles.selectionContent}>
+          <Text nativeID="selection-title" style={styles.selectionTitle}>
             Välj din karaktär
           </Text>
           <Text style={styles.selectionSubtitle}>
             Sedan startar ditt äventyr
           </Text>
 
-          <View style={styles.characterList}>
+          <View nativeID="character-list" style={styles.characterList}>
             {CHARACTERS.map((character) => (
               <TouchableOpacity
                 key={character.type}
+                testID={`character-card-${character.type}`}
                 style={styles.characterCard}
                 onPress={() => onSelectCharacter(character.type)}
                 activeOpacity={0.7}

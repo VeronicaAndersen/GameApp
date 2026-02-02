@@ -124,7 +124,7 @@ export const gameScreenStyles = StyleSheet.create({
     justifyContent: 'center' as const,
   },
   tabletRightColumn: {
-    flex: 1,
+    flex: 4,
     justifyContent: 'center' as const,
   },
   tabletGameHeader: {

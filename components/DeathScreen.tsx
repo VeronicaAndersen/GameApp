@@ -32,8 +32,8 @@ export const DeathScreen: React.FC<DeathScreenProps> = ({
       animationType="fade"
       statusBarTranslucent
     >
-      <View style={styles.overlay}>
-        <View style={styles.content}>
+      <View nativeID="death-screen-overlay" style={styles.overlay}>
+        <View nativeID="death-screen-content" style={styles.content}>
           <Text style={styles.tombstone}>🪦</Text>
           <Text style={styles.title}>Vila i Frid</Text>
           <Text style={styles.name}>{characterName}</Text>
@@ -42,7 +42,7 @@ export const DeathScreen: React.FC<DeathScreenProps> = ({
             Men minnet lever kvar för alltid.
           </Text>
 
-          <View style={styles.buttonContainer}>
+          <View nativeID="death-screen-buttons" style={styles.buttonContainer}>
             {canRevive && (
               <TouchableOpacity
                 style={[styles.button, styles.reviveButton]}

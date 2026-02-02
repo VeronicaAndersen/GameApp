@@ -17,7 +17,7 @@ export const LightsToggle: React.FC<LightsToggleProps> = ({
   onToggle,
 }) => {
   return (
-    <View style={styles.container}>
+    <View nativeID="lights-toggle" style={styles.container}>
       {isNightTime && (
         <View style={[styles.statusBadge, lightsOn ? styles.statusBadgeWarning : styles.statusBadgeSleep]}>
           <Text style={[styles.statusText, !lightsOn && styles.statusTextSleep]}>
