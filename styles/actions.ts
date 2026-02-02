@@ -29,10 +29,6 @@ export const actionStyles = StyleSheet.create({
     shadowOpacity: 0,
     elevation: 0,
   },
-  tabletActionButton: {
-    paddingVertical: verticalScale(24),
-    minWidth: scale(200),
-  },
   actionEmoji: {
     fontSize: moderateScale(32),
     marginBottom: verticalScale(4),
@@ -41,9 +37,6 @@ export const actionStyles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: moderateScale(14),
     fontWeight: 'bold',
-  },
-  tabletActionButtonText: {
-    fontSize: moderateScale(22),
   },
   actionRowContainer: {
     gap: scale(12),

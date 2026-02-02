@@ -16,7 +16,7 @@ export const statsStyles = StyleSheet.create({
     marginBottom: verticalScale(8),
     textAlign: 'center',
   },
-  tabletLevelText: {
+  wideLevelText: {
     fontSize: moderateScale(32),
   },
   xpBarContainer: {

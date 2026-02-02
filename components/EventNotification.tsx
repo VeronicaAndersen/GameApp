@@ -6,13 +6,13 @@ import { moderateScale, scale } from '../utils/responsive';
 export interface EventNotificationProps {
   event: RandomEvent | null;
   onDismiss: () => void;
-  isTablet: boolean;
+  isWideScreen: boolean;
 }
 
 export const EventNotification = React.memo<EventNotificationProps>(function EventNotification({
   event,
   onDismiss,
-  isTablet,
+  isWideScreen,
 }: EventNotificationProps): React.JSX.Element {
   // Memoize effect entries to prevent recalculation
   const effectEntries = useMemo(() => {
@@ -42,14 +42,14 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
           nativeID="event-card"
           style={[
             styles.eventCard,
-            isTablet && styles.tabletEventCard,
+            isWideScreen && styles.wideEventCard,
           ]}
         >
           <Text style={styles.eventEmoji}>{event.emoji}</Text>
           <Text
             style={[
               styles.eventTitle,
-              isTablet && styles.tabletEventTitle,
+              isWideScreen && styles.wideEventTitle,
             ]}
           >
             {event.title}
@@ -57,7 +57,7 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
           <Text
             style={[
               styles.eventMessage,
-              isTablet && styles.tabletEventMessage,
+              isWideScreen && styles.wideEventMessage,
             ]}
           >
             {event.message}
@@ -75,7 +75,7 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
                   style={[
                     styles.effectText,
                     isPositive ? styles.positiveEffect : styles.negativeEffect,
-                    isTablet && styles.tabletEffectText,
+                    isWideScreen && styles.wideEffectText,
                   ]}
                 >
                   {isPositive ? '+' : ''}{value} {statName}
@@ -87,7 +87,7 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
           <TouchableOpacity
             style={[
               styles.dismissButton,
-              isTablet && styles.tabletDismissButton,
+              isWideScreen && styles.wideDismissButton,
             ]}
             onPress={onDismiss}
             activeOpacity={0.8}
@@ -97,7 +97,7 @@ export const EventNotification = React.memo<EventNotificationProps>(function Eve
             <Text
               style={[
                 styles.dismissButtonText,
-                isTablet && styles.tabletDismissButtonText,
+                isWideScreen && styles.wideDismissButtonText,
               ]}
             >
               OK
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  tabletEventCard: {
+  wideEventCard: {
     padding: scale(32),
     borderRadius: moderateScale(24),
   },
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     marginBottom: scale(8),
     textAlign: 'center',
   },
-  tabletEventTitle: {
+  wideEventTitle: {
     fontSize: moderateScale(28),
   },
   eventMessage: {
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: moderateScale(22),
   },
-  tabletEventMessage: {
+  wideEventMessage: {
     fontSize: moderateScale(18),
     lineHeight: moderateScale(26),
   },
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     paddingVertical: scale(4),
     borderRadius: moderateScale(12),
   },
-  tabletEffectText: {
+  wideEffectText: {
     fontSize: moderateScale(16),
     paddingHorizontal: scale(12),
     paddingVertical: scale(6),
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(12),
     minWidth: scale(120),
   },
-  tabletDismissButton: {
+  wideDismissButton: {
     paddingVertical: scale(14),
     paddingHorizontal: scale(50),
   },
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
   },
-  tabletDismissButtonText: {
+  wideDismissButtonText: {
     fontSize: moderateScale(18),
   },
 });

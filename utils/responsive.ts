@@ -11,18 +11,6 @@ export const BREAKPOINTS = {
   largeDesktop: 1440,
 };
 
-// Device type detection
-export const isPhone = () => SCREEN_WIDTH < BREAKPOINTS.tablet;
-export const isTablet = () => SCREEN_WIDTH >= BREAKPOINTS.tablet && SCREEN_WIDTH < BREAKPOINTS.desktop;
-export const isDesktop = () => SCREEN_WIDTH >= BREAKPOINTS.desktop;
-
-// Get current device type
-export const getDeviceType = (): 'phone' | 'tablet' | 'desktop' => {
-  if (SCREEN_WIDTH < BREAKPOINTS.tablet) return 'phone';
-  if (SCREEN_WIDTH < BREAKPOINTS.desktop) return 'tablet';
-  return 'desktop';
-};
-
 // Responsive scaling functions with desktop optimization
 export const scale = (size: number) => {
   const baseScale = (SCREEN_WIDTH / BASE_WIDTH) * size;
@@ -51,13 +39,3 @@ export const moderateScale = (size: number, factor: number = 0.5) => {
   return scaled;
 };
 
-// Responsive size based on device type
-export const responsiveSize = (phone: number) => {
-  const deviceType = getDeviceType();
-  switch (deviceType) {
-    case 'phone':
-      return moderateScale(phone);
-    default:
-      return moderateScale(phone);
-  }
-};

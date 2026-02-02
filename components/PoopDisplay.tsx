@@ -4,17 +4,17 @@ import { moderateScale, verticalScale } from '../utils/responsive';
 
 interface PoopDisplayProps {
   poopCount: number;
-  isTablet: boolean;
+  isWideScreen: boolean;
 }
 
 /**
  * Displays poop emojis around the character based on poopCount
  */
-export const PoopDisplay: React.FC<PoopDisplayProps> = ({ poopCount, isTablet }) => {
+export const PoopDisplay: React.FC<PoopDisplayProps> = ({ poopCount, isWideScreen }) => {
   // Generate positions for poop emojis
   const poopPositions = useMemo(() => {
     const positions: { left: number; bottom: number }[] = [];
-    const baseSpread = isTablet ? 200 : 120;
+    const baseSpread = isWideScreen ? 200 : 120;
 
     for (let i = 0; i < poopCount; i++) {
       // Spread poops across the bottom area
@@ -26,7 +26,7 @@ export const PoopDisplay: React.FC<PoopDisplayProps> = ({ poopCount, isTablet })
       });
     }
     return positions;
-  }, [poopCount, isTablet]);
+  }, [poopCount, isWideScreen]);
 
   if (poopCount === 0) return null;
 
@@ -37,7 +37,7 @@ export const PoopDisplay: React.FC<PoopDisplayProps> = ({ poopCount, isTablet })
           key={index}
           style={[
             styles.poop,
-            isTablet && styles.poopTablet,
+            isWideScreen && styles.poopWide,
             // eslint-disable-next-line react-native/no-inline-styles
             { left: '50%', marginLeft: pos.left, bottom: pos.bottom },
           ]}
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     fontSize: moderateScale(24),
   },
-  poopTablet: {
+  poopWide: {
     fontSize: moderateScale(32),
   },
 });

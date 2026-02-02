@@ -5,7 +5,7 @@ import { CharacterIcon } from '../components/CharacterIcon';
 import { GameState, Dimensions as ScreenDimensions } from '../types';
 import { CHARACTERS, INITIAL_STATE, XP_PER_LEVEL, MAX_HUNGER, MAX_HAPPINESS, MAX_ENERGY, MAX_HEALTH } from '../constants';
 import { ANIMATION_CONFIG } from '../constants/animations';
-import { scale, moderateScale } from '../utils/responsive';
+import { scale, moderateScale, BREAKPOINTS } from '../utils/responsive';
 import { styles } from '../styles';
 import { useGameActions } from '../hooks/useGameActions';
 import { useLevelUp } from '../hooks/useLevelUp';
@@ -40,7 +40,7 @@ export function GameScreen({
   gameState,
   setGameState,
 }: GameScreenProps): React.JSX.Element {
-  const isWideScreen = dimensions.width >= 768;
+  const isWideScreen = dimensions.width >= BREAKPOINTS.tablet;
   const character = CHARACTERS.find((c) => c.type === gameState.character);
 
   const [showRenameModal, setShowRenameModal] = useState(false);
@@ -154,7 +154,7 @@ export function GameScreen({
 
   // Character display section
   const characterDisplaySection = (
-    <View nativeID="character-display" style={[styles.characterDisplay, isWideScreen && styles.tabletCharacterDisplay]}>
+    <View nativeID="character-display" style={[styles.characterDisplay, isWideScreen && styles.wideCharacterDisplay]}>
       <Animated.View
         style={[
           styles.characterDisplayContainer,
@@ -176,7 +176,7 @@ export function GameScreen({
           style={[
             styles.characterDisplayEmoji,
             { backgroundColor: character.color + '20' },
-            isWideScreen && styles.tabletCharacterDisplayEmoji,
+            isWideScreen && styles.wideCharacterDisplayEmoji,
             (character.type === 'lizard' || character.type === 'cat') && styles.lizardDisplayContainer,
             lightsOff && { backgroundColor: character.color + '10' },
           ]}
@@ -196,7 +196,7 @@ export function GameScreen({
           <SickIndicator isSick={tamagotchi.health.isSick} sickReason={tamagotchi.health.sickReason} />
           <NightOverlay visible={lightsOff} />
         </View>
-        <PoopDisplay poopCount={tamagotchi.poop.poopCount} isTablet={isWideScreen} />
+        <PoopDisplay poopCount={tamagotchi.poop.poopCount} isWideScreen={isWideScreen} />
         <Animated.View
           style={[
             styles.levelUpBadge,
@@ -213,12 +213,12 @@ export function GameScreen({
   const statsSection = (
     <View
       nativeID="stats-section"
-      style={[styles.statsContainer, isWideScreen && styles.tabletStatsContainer]}
+      style={[styles.statsContainer, isWideScreen && styles.wideStatsContainer]}
       accessibilityRole="summary"
       accessibilityLabel={`Character stats: Level ${gameState.level}, ${gameState.experience % XP_PER_LEVEL} of ${XP_PER_LEVEL} experience points, ${Math.round(gameState.hunger)}% hunger, ${Math.round(gameState.happiness)}% happiness, ${Math.round(gameState.energy)}% energy, ${Math.round(gameState.health)}% health`}
     >
-      <View style={[styles.levelContainer, isWideScreen && styles.tabletLevelContainer]}>
-        <Text style={[styles.levelText, isWideScreen && styles.tabletLevelText]} accessibilityRole="text">
+      <View style={[styles.levelContainer, isWideScreen && styles.wideLevelContainer]}>
+        <Text style={[styles.levelText, isWideScreen && styles.wideLevelText]} accessibilityRole="text">
           Level {gameState.level}
         </Text>
         <View style={styles.xpBarContainer}>
@@ -226,11 +226,11 @@ export function GameScreen({
         </View>
         <Text style={styles.xpText}>{gameState.experience % XP_PER_LEVEL} / {XP_PER_LEVEL} XP</Text>
       </View>
-      <View style={[styles.statRow, isWideScreen && styles.tabletStatRow]}>
+      <View style={[styles.statRow, isWideScreen && styles.wideStatRow]}>
         <StatBar label="Hunger" value={gameState.hunger} maxValue={MAX_HUNGER} barColor="#FF6B6B" />
         <StatBar label="Glädje" value={gameState.happiness} maxValue={MAX_HAPPINESS} barColor="#4FC3F7" />
       </View>
-      <View style={[styles.statRow, isWideScreen && styles.tabletStatRow]}>
+      <View style={[styles.statRow, isWideScreen && styles.wideStatRow]}>
         <StatBar label="Energi" value={gameState.energy} maxValue={MAX_ENERGY} barColor="#FFD93D" />
         <StatBar label="Hälsa" value={gameState.health} maxValue={MAX_HEALTH} barColor="#69F0AE" />
       </View>
@@ -239,7 +239,7 @@ export function GameScreen({
 
   // Actions section
   const actionsSection = (
-    <View nativeID="actions-section" style={[styles.actionRowContainer, isWideScreen && styles.tabletActionRowContainer]}>
+    <View nativeID="actions-section" style={[styles.actionRowContainer, isWideScreen && styles.wideActionRowContainer]}>
       <View style={styles.actionRow}>
         <ActionButton emoji="🍕" label="Mat" colorStyle={styles.actionButtonEat}
           onPress={handleEatWithAnimation} disabled={gameState.hunger >= MAX_HUNGER}
@@ -272,7 +272,7 @@ export function GameScreen({
 
   // Header section
   const headerSection = (
-    <View nativeID="game-header" style={[styles.gameHeader, isWideScreen && styles.tabletGameHeader]}>
+    <View nativeID="game-header" style={[styles.gameHeader, isWideScreen && styles.wideGameHeader]}>
       <View style={[styles.headerRow, { gap: scale(12) }]}>
         <TouchableOpacity
           onPress={() => setShowRenameModal(true)}
@@ -323,13 +323,13 @@ export function GameScreen({
       <SpaceBackground />
       {isWideScreen ? (
         // Tablet: two-column layout, no scrolling
-        <View nativeID="game-content" style={[styles.gameContent, styles.tabletGameContent, { paddingHorizontal: scale(24), paddingVertical: scale(8) }]}>
+        <View nativeID="game-content" style={[styles.gameContent, styles.wideGameContent, { paddingHorizontal: scale(24), paddingVertical: scale(8) }]}>
           {headerSection}
-          <View nativeID="game-body" style={styles.tabletBody}>
-            <View nativeID="game-column-left" style={styles.tabletLeftColumn}>
+          <View nativeID="game-body" style={styles.wideBody}>
+            <View nativeID="game-column-left" style={styles.wideLeftColumn}>
               {characterDisplaySection}
             </View>
-            <View nativeID="game-column-right" style={styles.tabletRightColumn}>
+            <View nativeID="game-column-right" style={styles.wideRightColumn}>
               {statsSection}
               {actionsSection}
             </View>
@@ -351,7 +351,7 @@ export function GameScreen({
         </ScrollView>
       )}
 
-      <EventNotification event={currentEvent} onDismiss={dismissEvent} isTablet={isWideScreen} />
+      <EventNotification event={currentEvent} onDismiss={dismissEvent} isWideScreen={isWideScreen} />
 
       <DeathScreen
         visible={tamagotchi.health.isDead}
@@ -372,7 +372,7 @@ export function GameScreen({
           playHappyAnimation();
         }}
         onClose={() => setShowRenameModal(false)}
-        isTablet={isWideScreen}
+        isWideScreen={isWideScreen}
       />
     </SafeAreaView>
   );

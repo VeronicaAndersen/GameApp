@@ -5,7 +5,7 @@ import { CharacterIcon } from '../components/CharacterIcon';
 import { SpaceBackground } from '../components/SpaceBackground';
 import { CharacterType, Dimensions } from '../types';
 import { CHARACTERS } from '../constants';
-import { scale, moderateScale } from '../utils/responsive';
+import { scale, moderateScale, BREAKPOINTS } from '../utils/responsive';
 import { styles } from '../styles';
 
 export interface CharacterSelectionScreenProps {
@@ -17,7 +17,7 @@ export function CharacterSelectionScreen({
   dimensions,
   onSelectCharacter,
 }: CharacterSelectionScreenProps): React.JSX.Element {
-  const isWideScreen = dimensions.width >= 768;
+  const isWideScreen = dimensions.width >= BREAKPOINTS.tablet;
 
   return (
     <SafeAreaView

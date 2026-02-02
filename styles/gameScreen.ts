@@ -7,10 +7,6 @@ export const gameScreenStyles = StyleSheet.create({
     paddingHorizontal: scale(20),
     paddingVertical: verticalScale(20),
   },
-  tabletScrollContent: {
-    paddingHorizontal: scale(40),
-    paddingVertical: verticalScale(40),
-  },
   gameContent: {
     flex: 1,
     width: '100%',
@@ -53,18 +49,10 @@ export const gameScreenStyles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-  tabletBackButton: {
-    paddingVertical: verticalScale(16),
-    paddingHorizontal: scale(32),
-    minWidth: scale(200),
-  },
   backButtonText: {
     fontSize: moderateScale(16),
     color: '#8B8FC7',
     fontWeight: '600',
-  },
-  tabletBackButtonText: {
-    fontSize: moderateScale(18),
   },
   characterDisplay: {
     alignItems: 'center',
@@ -82,7 +70,7 @@ export const gameScreenStyles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'visible',
   },
-  tabletCharacterDisplayEmoji: {
+  wideCharacterDisplayEmoji: {
     width: scale(200),
     height: scale(200),
     borderRadius: scale(100),
@@ -109,46 +97,46 @@ export const gameScreenStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: moderateScale(16),
   },
-  // Tablet two-column layout
-  tabletGameContent: {
+  // Wide screen two-column layout
+  wideGameContent: {
     maxWidth: undefined,
   },
-  tabletBody: {
+  wideBody: {
     flexDirection: 'row' as const,
     gap: scale(24),
     flex: 1,
   },
-  tabletLeftColumn: {
+  wideLeftColumn: {
     flex: 1,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
   },
-  tabletRightColumn: {
+  wideRightColumn: {
     flex: 4,
     justifyContent: 'center' as const,
   },
-  tabletGameHeader: {
+  wideGameHeader: {
     marginBottom: verticalScale(8),
   },
-  tabletCharacterDisplay: {
+  wideCharacterDisplay: {
     marginBottom: verticalScale(8),
   },
-  tabletStatsContainer: {
+  wideStatsContainer: {
     marginBottom: verticalScale(12),
     gap: verticalScale(8),
   },
-  tabletLevelContainer: {
+  wideLevelContainer: {
     marginBottom: verticalScale(6),
   },
-  tabletStatRow: {
+  wideStatRow: {
     flexDirection: 'row' as const,
     gap: scale(12),
   },
-  tabletStatItem: {
+  wideStatItem: {
     flex: 1,
     marginBottom: 0,
   },
-  tabletActionRowContainer: {
+  wideActionRowContainer: {
     gap: scale(8),
   },
 });

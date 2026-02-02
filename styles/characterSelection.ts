@@ -20,7 +20,7 @@ export const characterSelectionStyles = StyleSheet.create({
     marginBottom: verticalScale(8),
     textAlign: 'center',
   },
-  tabletTitle: {
+  wideTitle: {
     fontSize: moderateScale(48),
   },
   selectionSubtitle: {
@@ -29,7 +29,7 @@ export const characterSelectionStyles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: verticalScale(32),
   },
-  tabletSubtitle: {
+  wideSubtitle: {
     fontSize: moderateScale(24),
   },
   selectionContentFullscreen: {
@@ -60,7 +60,7 @@ export const characterSelectionStyles = StyleSheet.create({
     flex: 1,
     maxWidth: 400,
   },
-  tabletCharacterCard: {
+  wideCharacterCard: {
     padding: scale(32),
   },
   characterEmojiContainer: {
@@ -72,7 +72,7 @@ export const characterSelectionStyles = StyleSheet.create({
     marginBottom: verticalScale(16),
     overflow: 'visible',
   },
-  tabletCharacterEmojiContainer: {
+  wideCharacterEmojiContainer: {
     width: scale(150),
     height: scale(150),
     borderRadius: scale(75),
@@ -93,7 +93,7 @@ export const characterSelectionStyles = StyleSheet.create({
     color: '#E0E4FF',
     textAlign: 'center',
   },
-  tabletCharacterName: {
+  wideCharacterName: {
     fontSize: moderateScale(28),
   },
 });

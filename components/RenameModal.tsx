@@ -8,7 +8,7 @@ interface RenameModalProps {
   characterName: string;
   onRename: (name: string) => void;
   onClose: () => void;
-  isTablet: boolean;
+  isWideScreen: boolean;
 }
 
 export const RenameModal = React.memo<RenameModalProps>(({
@@ -17,7 +17,7 @@ export const RenameModal = React.memo<RenameModalProps>(({
   characterName,
   onRename,
   onClose,
-  isTablet,
+  isWideScreen,
 }) => {
   const [newName, setNewName] = useState('');
 
@@ -41,13 +41,13 @@ export const RenameModal = React.memo<RenameModalProps>(({
       onRequestClose={handleClose}
     >
       <View nativeID="rename-modal-overlay" style={modalStyles.overlay}>
-        <View nativeID="rename-modal" style={[modalStyles.modal, isTablet && modalStyles.tabletModal]}>
-          <Text style={[modalStyles.title, isTablet && modalStyles.tabletTitle]}>
+        <View nativeID="rename-modal" style={[modalStyles.modal, isWideScreen && modalStyles.wideModal]}>
+          <Text style={[modalStyles.title, isWideScreen && modalStyles.wideTitle]}>
             Ge {characterName} ett nytt namn
           </Text>
           <TextInput
             nativeID="rename-input"
-            style={[modalStyles.input, isTablet && modalStyles.tabletInput]}
+            style={[modalStyles.input, isWideScreen && modalStyles.wideInput]}
             value={newName}
             onChangeText={setNewName}
             placeholder={currentName || characterName}
@@ -59,19 +59,19 @@ export const RenameModal = React.memo<RenameModalProps>(({
           />
           <View nativeID="rename-modal-buttons" style={modalStyles.buttons}>
             <TouchableOpacity
-              style={[modalStyles.button, modalStyles.cancelButton, isTablet && modalStyles.tabletButton]}
+              style={[modalStyles.button, modalStyles.cancelButton, isWideScreen && modalStyles.wideButton]}
               onPress={handleClose}
               activeOpacity={0.8}
             >
-              <Text style={[modalStyles.buttonText, isTablet && modalStyles.tabletButtonText]}>Avbryt</Text>
+              <Text style={[modalStyles.buttonText, isWideScreen && modalStyles.wideButtonText]}>Avbryt</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[modalStyles.button, modalStyles.confirmButton, isTablet && modalStyles.tabletButton]}
+              style={[modalStyles.button, modalStyles.confirmButton, isWideScreen && modalStyles.wideButton]}
               onPress={handleSubmit}
               activeOpacity={0.8}
               disabled={!newName.trim()}
             >
-              <Text style={[modalStyles.buttonText, isTablet && modalStyles.tabletButtonText]}>Spara</Text>
+              <Text style={[modalStyles.buttonText, isWideScreen && modalStyles.wideButtonText]}>Spara</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -104,7 +104,7 @@ const modalStyles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  tabletModal: {
+  wideModal: {
     padding: scale(32),
   },
   title: {
@@ -114,7 +114,7 @@ const modalStyles = StyleSheet.create({
     marginBottom: verticalScale(16),
     textAlign: 'center',
   },
-  tabletTitle: {
+  wideTitle: {
     fontSize: moderateScale(24),
   },
   input: {
@@ -127,7 +127,7 @@ const modalStyles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#2A2F5A',
   },
-  tabletInput: {
+  wideInput: {
     padding: scale(16),
     fontSize: moderateScale(18),
   },
@@ -142,7 +142,7 @@ const modalStyles = StyleSheet.create({
     borderRadius: moderateScale(12),
     alignItems: 'center',
   },
-  tabletButton: {
+  wideButton: {
     paddingVertical: verticalScale(14),
   },
   cancelButton: {
@@ -156,7 +156,7 @@ const modalStyles = StyleSheet.create({
     fontSize: moderateScale(16),
     fontWeight: '600',
   },
-  tabletButtonText: {
+  wideButtonText: {
     fontSize: moderateScale(18),
   },
 });
