@@ -322,7 +322,7 @@ export function GameScreen({
       <SpaceBackground />
       {isWideScreen ? (
         // Tablet: two-column layout, no scrolling
-        <View nativeID="game-content" style={[styles.gameContent, styles.wideGameContent, { paddingHorizontal: scale(24), paddingVertical: scale(8) }]}>
+        <View nativeID="game-content" style={styles.gameContent}>
           {headerSection}
           <View nativeID="game-body" style={styles.wideBody}>
             <View nativeID="game-column-left" style={styles.wideLeftColumn}>
@@ -341,7 +341,7 @@ export function GameScreen({
           contentContainerStyle={styles.gameScrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <View nativeID="game-content" style={styles.gameContent}>
+          <View nativeID="game-content" style={[styles.gameContent, styles.phoneGameContent]}>
             {headerSection}
             {characterDisplaySection}
             {statsSection}

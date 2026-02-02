@@ -10,8 +10,11 @@ export const gameScreenStyles = StyleSheet.create({
   gameContent: {
     flex: 1,
     width: '100%',
-    maxWidth: 600,
     alignSelf: 'center',
+    padding: 64
+  },
+  phoneGameContent: {
+    maxWidth: 600,
   },
   gameHeader: {
     marginBottom: verticalScale(24),
@@ -98,9 +101,6 @@ export const gameScreenStyles = StyleSheet.create({
     fontSize: moderateScale(16),
   },
   // Wide screen two-column layout
-  wideGameContent: {
-    maxWidth: undefined,
-  },
   wideBody: {
     flexDirection: 'row' as const,
     gap: scale(24),
@@ -112,7 +112,7 @@ export const gameScreenStyles = StyleSheet.create({
     justifyContent: 'center' as const,
   },
   wideRightColumn: {
-    flex: 1,
+    flex: 2,
     justifyContent: 'center' as const,
   },
   wideGameHeader: {
