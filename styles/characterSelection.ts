@@ -32,16 +32,33 @@ export const characterSelectionStyles = StyleSheet.create({
   tabletSubtitle: {
     fontSize: moderateScale(24),
   },
+  selectionContentFullscreen: {
+    flex: 1,
+    width: '100%',
+    alignSelf: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingHorizontal: scale(20),
+    paddingVertical: verticalScale(20),
+  },
   characterList: {
     gap: verticalScale(20),
+  },
+  characterListRow: {
+    flexDirection: 'row' as const,
+    gap: scale(24),
+    justifyContent: 'center' as const,
   },
   characterCard: {
     backgroundColor: '#141832',
     borderRadius: moderateScale(16),
     padding: scale(24),
-    alignItems: 'center',
+    alignItems: 'center' as const,
     borderWidth: 2,
     borderColor: '#2A2F5A',
+  },
+  characterCardWide: {
+    flex: 1,
+    maxWidth: 400,
   },
   tabletCharacterCard: {
     padding: scale(32),

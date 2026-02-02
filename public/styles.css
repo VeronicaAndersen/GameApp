@@ -1,4 +1,8 @@
 /* Responsive Web Styles */
+:root {
+  color-scheme: light only;
+}
+
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -14,6 +18,7 @@ body {
   height: 100vh; /* Fallback for browsers that don't support dvh */
   height: 100dvh;
   overflow: hidden;
+  background-color: #0B0D1A;
 }
 
 #root {
@@ -22,6 +27,7 @@ body {
   height: 100dvh;
   position: relative;
   overflow: hidden;
+  background-color: #0B0D1A;
 }
 
 /* Mobile-first responsive design */
@@ -59,13 +65,6 @@ body {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   #root {
     image-rendering: -webkit-optimize-contrast;
-  }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #000000;
   }
 }
 
